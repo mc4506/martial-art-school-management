@@ -1,6 +1,17 @@
+/* Looks AWFUL in small sizing */
+/* @font-face {
+  font-family: 'machaCow';
+  src: url('../machaCow.ttf');
+}
+
+.themefont {
+  font-family: 'machaCow';
+} */
+
 form.signup,
 form.login {
   margin-top: 50px;
+<<<<<<< HEAD
 }
 
 
@@ -21,3 +32,6 @@ form.login {
 }
 
 
+=======
+}
+>>>>>>> 88b7d2521d93ea080cfb45430789d8bb01c84dfe
