@@ -1,3 +1,13 @@
+/* Looks AWFUL in small sizing */
+/* @font-face {
+  font-family: 'machaCow';
+  src: url('../machaCow.ttf');
+}
+
+.themefont {
+  font-family: 'machaCow';
+} */
+
 form.signup,
 form.login {
   margin-top: 50px;
