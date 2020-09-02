@@ -11,4 +11,27 @@
 form.signup,
 form.login {
   margin-top: 50px;
+<<<<<<< HEAD
 }
+
+
+#myVideo {
+  position: fixed;
+  top: 56px;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0.5;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.dropdown-menu {
+  width: 300px;
+}
+
+
+=======
+}
+>>>>>>> 88b7d2521d93ea080cfb45430789d8bb01c84dfe
