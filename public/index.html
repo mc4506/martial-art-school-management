@@ -13,62 +13,79 @@
 <body class="bg-dark">
 
     <header>
-        <nav class="navbar navbar-danger bg-danger text-light">
-            <span class="navbar-brand mb-0 h1">Call 1-888-123-4567 to learn about our COVID-19 Safety Guidelines</span>
+        <nav class="bg-danger text-light p-1">
+            <p class="h4 mb-0">Call 1-888-123-4567 to learn about our COVID-19 Safety Guidelines</p>
         </nav>
-        <nav class="navbar navbar-dark bg-transparent">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
             <a class="navbar-brand" href="#">
                 <img src="./imgs/martial-arts-square.png" width="100" height="100" class="d-inline-block align-middle"
-                    alt="" loading="lazy">
-                <span class="navar-brand h1">FS MMA</span>
+                    alt="FS MMA logo" loading="lazy">
+                <h1 class="d-inline align-middle">FS MMA</h1>
             </a>
-            <ul class="nav nav-pills nav-fill">
-                <li class="nav-item">
-                    <a class="nav-link active bg-danger" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="#">About FS MMA</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="#">Classes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="#">Contact Us</a>
-                </li>
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Login
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                            <form class="px-2 py-2">
-                                <div class="form-group">
-                                    <label for="userName">Username</label>
-                                    <input type="text" class="form-control" id="userName" aria-describedby="emailHelp">
-                                </div>
-                                <div class="form-group">
-                                    <label for="userPassword">Password</label>
-                                    <input type="password" class="form-control" id="userPassword">
-                                </div>
-                                <div class="form-inline">
-                                    <button type="submit" class="btn btn-danger">Login</button>
-                                    <button type="submit" class="btn btn-danger mx-2">Register</button>
-                                </div>
-                            </form>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav nav-pills ml-auto">
+
+                    <li class="nav-item mr-3">
+                        <a class="nav-link active bg-danger" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="#">About FS MMA</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="#">Classes</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="#">Contact Us</a>
+                    </li>
+                    <li class="nav-item mr-3 d-lg-none">
+                        <a class="nav-link text-light" href="#">Login</a>
+                    </li>
+                    <li class="nav-item mr-3 d-lg-none">
+                        <a class="nav-link text-light" href="#">Register</a>
+                    </li>
+                    <li class="nav-item mr-3 d-none d-lg-block">
+                        <div class="dropdown">
+                            <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Login
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                <form class="px-2 py-2">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="text" class="form-control" id="email"
+                                            aria-describedby="emailHelp">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="userPassword">Password</label>
+                                        <input type="password" class="form-control" id="userPassword">
+                                    </div>
+                                    <div class="form-inline">
+                                        <button type="submit" class="btn btn-danger">Login</button>
+                                        <button type="submit" class="btn btn-danger mx-2">Register</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
 
     <main class="container">
         <div class="jumbotron jumbotron-fluid bg-transparent">
             <div class="text-light align-middle">
-                <video autoplay muted loop id="myVideo">
+                <video autoplay muted loop id="myVideo" class="d-none d-md-block">
                     <source src="./imgs/mma.mov" type="video/mp4">
                 </video>
+                <img src="imgs/sm-screen-bg.jpg" class="d-md-none" id="smScreenBg" width="500">
                 <h1 class="display-3 font-weight-bold">FULL STACK</h1>
                 <h1 class="display-3 font-weight-bold">Mixed Martial Arts</h1>
                 <h2>Master the front and back end</h2>
@@ -80,26 +97,36 @@
     </main>
 
     <footer>
-        <div class="fixed-bottom text-light">
+        <div class="fixed-bottom d-none d-md-block">
             <div>
-                <ul class="nav nav-fill">
+                <ul class="nav nav-fill text-light">
                     <li class="nav-item">
                         Copyright &#169 2020
                     </li>
                     <li class="nav-item">
-                        jmc846
+                        <a href="https://jmc846.github.io" class="footer-link">
+                            jmc846
+                        </a>
+
                     </li>
                     <li class="nav-item">
-                        mc4506
+                        <a href="https://mc4506.github.io" class="footer-link">
+                            mc4506
+                        </a>
                     </li>
                     <li class="nav-item">
-                        nlamonaco86
+                        <a href="https://nlamonaco86.github.io/Portfolio/" class="footer-link">
+                            nlamonaco86
+                        </a>
+
                     </li>
                     <li class="nav-item">
+                        <a href="https://sbolotnikov.github.io/Responsive-Portfolio/" class="footer-link">
                         sbolotnikov
+                    </a>
                     </li>
                     <li class="nav-item">
-                        -Stock footage provided by Videvo, downloaded from www.videvo.net
+                        -Stock footage provided by Videvo, downloaded from <a href="https://www.videvo.net" class="footer-link">www.videvo.net</a>
 
                     </li>
                 </ul>

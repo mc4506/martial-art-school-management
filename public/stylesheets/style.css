@@ -11,13 +11,12 @@
 form.signup,
 form.login {
   margin-top: 50px;
-<<<<<<< HEAD
 }
 
 
 #myVideo {
   position: fixed;
-  top: 56px;
+  top: 36px;
   right: 0;
   bottom: 0;
   min-width: 100%;
@@ -31,7 +30,25 @@ form.login {
   width: 300px;
 }
 
-
-=======
+.footer-link {
+  text-decoration: underline;
+  color: white;
 }
->>>>>>> 88b7d2521d93ea080cfb45430789d8bb01c84dfe
+
+@media (max-width: 767.98px) {
+  .display-3 {
+    font-size: 3rem;
+  }
+
+  #smScreenBg {
+    position: fixed;
+    top: 36px;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    opacity: 0.35;
+    object-fit: cover;
+    z-index: -1;
+  }
+}
