@@ -41,6 +41,14 @@ $(document).ready(function () {
 
         signUpUser(userData);
 
+        // reset form data
+        $("#firstName").val("");
+        $("#lastName").val("");
+        $("#birthday").val("");
+        $("#phoneNumber").val("");
+        $("#signUpEmail").val("");
+        $("#signUpPassword").val("");
+
       } else {
         $(".alert").removeClass("d-none")
       };
