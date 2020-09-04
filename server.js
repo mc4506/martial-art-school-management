@@ -20,9 +20,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const apiRoutes = require("./routes/api-routes.js")
+const htmlRoutes = require("./routes/html-routes.js")
+app.use ('/api',apiRoutes)
+app.use ('./',htmlRoutes)
 // Requiring our routes
-require("./routes/html-routes.js")(app);
-require("./routes/api-routes.js")(app);
+// require("./routes/html-routes.js")(app);
+// require("./routes/api-routes.js")(app);
 
 // Syncing our database and logging a message to the user upon success
 db.sequelize.sync().then(() => {
