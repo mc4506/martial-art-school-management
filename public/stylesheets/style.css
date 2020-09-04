@@ -8,12 +8,6 @@
   font-family: 'machaCow';
 } */
 
-form.signup,
-form.login {
-  margin-top: 50px;
-}
-
-
 #myVideo {
   position: fixed;
   top: 36px;
