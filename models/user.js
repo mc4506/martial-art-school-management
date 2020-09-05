@@ -10,6 +10,7 @@ module.exports = function (sequelize, DataTypes) {
     age: { type: DataTypes.INT, allowNull: false, validate: { max: 120 }},
     // The email cannot be null, and must be a proper email before creation
     email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true } },
+    telephone: { type: DataTypes.INT, allowNull: false },
     // The password cannot be null
     password: { type: DataTypes.STRING, allowNull: false }
   });
