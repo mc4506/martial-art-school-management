@@ -1,5 +1,6 @@
 {
   "development": {
+    "use_env_variable": "LOCALDB",
     "username": "root",
     "password": null,
     "database": "passport_demo",
