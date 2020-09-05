@@ -5,22 +5,23 @@
   <title>Passport Authentication</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="stylesheets/style.css" rel="stylesheet">
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <div class="navbar-header">
-      </div>
-    </div>
+  <!-- PIN ME TO THE TOP-->
+  <nav class="navbar bg-danger">
+    </p>
+    </p>
   </nav>
+
+<!-- FLOAT ME IN THE CENTER -->
   <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h2>Login Form</h2>
-        <form class="login">
+    <div class="d-flex justify-content-center">
+      <div class="col-lg-6">
+        <h2 class="font-weight-bold">Welcome to Full Stack MMA</h1>
+        <form>
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input type="email" class="form-control" id="email-input" placeholder="Email">
@@ -29,16 +30,28 @@
             <label for="exampleInputPassword1">Password</label>
             <input type="password" class="form-control" id="password-input" placeholder="Password">
           </div>
-          <button type="submit" class="btn btn-default">Login</button>
+          <button type="submit" class="btn-lg btn-danger">Login</button>
         </form>
         <br />
-        <p>Or sign up <a href="/">here</a></p>
+        <p>Or sign up <a href="/" class="text-danger">here</a></p>
       </div>
+    </div>
+  </div>
+
+  <!-- PIN ME TO THE BOTTOM-->
+  <div class="p-3 mb-2 bg-danger text-white">
+    <div class="d-flex flex-row justify-content-around">
+      <p class="text-white">Contact Us:</p>
+      <a class="text-white" href="mailto:jmc846@scarletmail.rutgers.gmail.com">Jonathan Cobb</a>
+      <a class="text-white" href="mailto:placeholder@email.com">Michael Chen</a>
+      <a class="text-white" href="mailto:nlamonaco86@gmail.com">Nicholas La Monaco</a>
+      <a class="text-white" href="mailto:sbolotnikov@gmail.com">Sergey Bolotnikov</a>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript" src="js/login.js"></script>
+</body>
 
 </body>
 

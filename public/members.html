@@ -5,25 +5,37 @@
   <title>Passport Authentication</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link href="stylesheets/style.css" rel="stylesheet">
 </head>
 
 <body>
-  <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="/logout">
-        Logout
-      </a>
-    </div>
-  </div>
-</nav>
+    <!-- PIN ME TO THE TOP-->
+    <nav class="navbar bg-danger">
+      <div class="navbar-header">
+        <a class="navbar-brand text-white font-weight-bold" href="/logout">
+          Logout
+        </a>
+      </div>
+  </nav>
+
+  <!-- FLOAT ME IN THE CENTER-->
   <div class="container">
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
-        <h2>Welcome <span class="member-name"></span></h2>
+        <h2 class="display-4 font-weight-bold">Welcome <span class="member-name"></span></h2>
       </div>
+    </div>
+  </div>
+
+  <!-- PIN ME TO THE BOTTOM-->
+  <div class="p-3 mb-2 bg-danger text-white">
+    <div class="d-flex flex-row justify-content-around">
+      <p class="text-white">Contact Us:</p>
+      <a class="text-white" href="mailto:jmc846@scarletmail.rutgers.gmail.com">Jonathan Cobb</a>
+      <a class="text-white" href="mailto:placeholder@email.com">Michael Chen</a>
+      <a class="text-white" href="mailto:nlamonaco86@gmail.com">Nicholas La Monaco</a>
+      <a class="text-white" href="mailto:sbolotnikov@gmail.com">Sergey Bolotnikov</a>
     </div>
   </div>
 
