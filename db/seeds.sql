@@ -12,3 +12,7 @@
 -- INSERT INTO kicks (message, userID, timestamp)
 -- VALUES ("This is the best MMA school I've ever gone to, hands down.", "JDoe92", "Friday 9:26:31am EST"),
 --        ("Had a great time this weekend, see you guys next Sunday!", "SenseiT", "Sunday 5:17:31pm EST")
+
+-- 2 teachers/admins
+-- 10 students seniors / kids / adults
+-- 3 classes  adult / advanced / intermediate
