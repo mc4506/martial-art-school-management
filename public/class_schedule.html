@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="./stylesheets/style.css">
-    <script src="js/login.js" defer></script>
+    <script src="./js/login.js" defer></script>
+    <script src="./js/classSchedule.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
     <title>Full Stack MMA</title>
 </head>
 
@@ -39,7 +41,7 @@
                         <a class="nav-link text-light" href="#">About FS MMA</a>
                     </li>
                     <li class="nav-item mr-3">
-                        <a class="nav-link text-light" href="class_schedule.html">Classes</a>
+                        <a class="nav-link text-light" href="#">Classes</a>
                     </li>
                     <li class="nav-item mr-3">
                         <a class="nav-link text-light" href="#">Contact Us</a>
@@ -81,59 +83,26 @@
     </header>
 
     <main class="container">
-        <div class="jumbotron jumbotron-fluid bg-transparent">
-            <div class="text-light align-middle">
-                <video autoplay muted loop id="myVideo" class="d-none d-md-block">
-                    <source src="./imgs/mma.mov" type="video/mp4">
-                </video>
-                <img src="imgs/sm-screen-bg.jpg" class="d-md-none" id="smScreenBg" width="500">
-                <h1 class="display-3 font-weight-bold">FULL STACK</h1>
-                <h1 class="display-3 font-weight-bold">Mixed Martial Arts</h1>
-                <h2>Master the front and back end</h2>
-                <p class="lead">Build confidence. Get in Shape.
-                    Classes for adults and kids.</p>
-            </div>
-        </div>
+        <h1 class="text-light">Class Schedule for <span id="currentMonth"></span></h1>
+       <table class="table table-bordered text-light">
+           <thead>
+               <tr>
+                   <th scope="col"></th>
+                   <th scope="col" id="day0"></th>
+                   <th scope="col" id="day1"></th>
+                   <th scope="col" id="day2"></th>
+                   <th scope="col" id="day3"></th>
+                   <th scope="col" id="day4"></th>
+                   <th scope="col" id="day5"></th>
+                   <th scope="col" id="day6"></th>
+               </tr>
+           </thead>
+           <tbody class="schedule">
+               
+           </tbody>
+       </table>
 
     </main>
-
-    <footer>
-        <div class="fixed-bottom d-none d-md-block">
-            <div>
-                <ul class="nav nav-fill text-light">
-                    <li class="nav-item">
-                        Copyright &#169 2020
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://jmc846.github.io" class="footer-link">
-                            jmc846
-                        </a>
-
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://mc4506.github.io" class="footer-link">
-                            mc4506
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://nlamonaco86.github.io/Portfolio/" class="footer-link">
-                            nlamonaco86
-                        </a>
-
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://sbolotnikov.github.io/Responsive-Portfolio/" class="footer-link">
-                        sbolotnikov
-                    </a>
-                    </li>
-                    <li class="nav-item">
-                        -Stock footage provided by Videvo, downloaded from <a href="https://www.videvo.net" class="footer-link">www.videvo.net</a>
-
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </footer>
 
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
