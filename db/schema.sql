@@ -2,6 +2,42 @@ DROP DATABASE IF EXISTS mma_db;
 
 CREATE DATABASE mma_db;
 
+-- **** VERSION 3 ****
+-- This one is only 3 tables
+-- CREATE TABLE users(
+--     id INT AUTO_INCREMENT,
+--     memberStatus STATUS NOT NULL,
+--     firstName VARCHAR (50) NOT NULL,
+--     lastName VARCHAR (50) NOT NULL,
+--     certLevel TINYINT NOT NULL,
+--     age INT (10) NOT NULL,
+--     email VARCHAR (50) NOT NULL,
+--     telephone VARCHAR (50) NOT NULL,
+--     password VARCHAR (20) NOT NULL,
+--     primary key (id)
+-- );
+
+-- CREATE TABLE sessions (
+--     sessionID INT AUTO_INCREMENT,
+--     sessionName VARCHAR (50) NOT NULL,
+--     level TINYINT NOT NULL,
+--     primary key (sessionID),
+--     employeeID INTEGER NOT NULL,
+--     classSize INT (10) NOT NULL,
+--     inPersonLimit INT,
+--     date DATETIME NOT NULL,
+--     status TINYINT NOT NULL,
+--     primary key (sessionID)
+-- );
+
+-- CREATE TABLE kicks (
+--     postID INT AUTO_INCREMENT,
+--     message VARCHAR (280) NOT NULL,
+--     userID VARCHAR (50) NOT NULL,
+--     primary key (postID)
+-- );
+
+-- *** VERSION 2 ***
 -- CREATE TABLE users(
 --     id INT AUTO_INCREMENT,
 --     memberStatus STATUS NOT NULL,
@@ -39,6 +75,7 @@ CREATE DATABASE mma_db;
 --     primary key (postID)
 -- );
 
+-- ** VERSION 1 **
 -- CREATE TABLE students(
 -- id INT auto_increment,
 -- firstName VARCHAR (30) NOT NULL,
