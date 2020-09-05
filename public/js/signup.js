@@ -98,7 +98,7 @@ const convertBdayToAge = function (bday) {
 
 const getCertLevel = function(level) {
   const assignRank = {
-    "I don't have one": 1,
+    "I don't have one": 0,
     "White": 1,
     "Blue": 2,
     "Yellow": 3,
