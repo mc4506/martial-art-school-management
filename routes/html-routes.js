@@ -26,14 +26,20 @@ module.exports = function(app) {
   app.get("/members", isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, "../public/members.html"));
   });
+// from the member page, if user wants to log out of site
+app.get("/logout", isAuthenticated, (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
+
+
   
 //if user wants to see available dates for Class and sign up for classes
-  app.get("/classes", function(req, res) {
-    res.sendFile(path.join(__dirname, "../public/classes.html"));
-  });
+  // app.get("/classes", function(req, res) {
+  //   res.sendFile(path.join(__dirname, "../public/classes.html"));
+  // });
 
-  //if user wants to access the contact information for the Martial Arts school
-  app.get("/contact", function(req, res) {
-    res.sendFile(path.join(__dirname, "../public/contact.html"));
-  });
+  // //if user wants to access the contact information for the Martial Arts school
+  // app.get("/contact", function(req, res) {
+  //   res.sendFile(path.join(__dirname, "../public/contact.html"));
+  // });
 };
