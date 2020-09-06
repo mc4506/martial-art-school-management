@@ -2,45 +2,68 @@
 <html lang="en">
 
 <head>
-  <title>Passport Authentication</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link href="stylesheets/style.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <script src="./js/members.js" defer></script>
+    <title>Welcome, Martial Artist</title>
 </head>
 
 <body>
-    <!-- PIN ME TO THE TOP-->
-    <nav class="navbar bg-danger">
-      <div class="navbar-header">
-        <a class="navbar-brand text-white font-weight-bold" href="/logout">
-          Logout
-        </a>
-      </div>
-  </nav>
 
-  <!-- FLOAT ME IN THE CENTER-->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3">
-        <h2 class="display-4 font-weight-bold">Welcome <span class="member-name"></span></h2>
-      </div>
-    </div>
-  </div>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+            <a class="navbar-brand" href="#">
+                <img src="./imgs/martial-arts-square.png" width="100" height="100" class="d-inline-block align-middle"
+                    alt="FS MMA logo" loading="lazy">
+                <h1 class="d-inline align-middle">Welcome <span class="member-name"></span></h1>
+            </a>
 
-  <!-- PIN ME TO THE BOTTOM-->
-  <div class="p-3 mb-2 bg-danger text-white">
-    <div class="d-flex flex-row justify-content-around">
-      <p class="text-white">Contact Us:</p>
-      <a class="text-white" href="mailto:jmc846@scarletmail.rutgers.gmail.com">Jonathan Cobb</a>
-      <a class="text-white" href="mailto:placeholder@email.com">Michael Chen</a>
-      <a class="text-white" href="mailto:nlamonaco86@gmail.com">Nicholas La Monaco</a>
-      <a class="text-white" href="mailto:sbolotnikov@gmail.com">Sergey Bolotnikov</a>
-    </div>
-  </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+                aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script type="text/javascript" src="js/members.js"></script>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                <ul class="navbar-nav nav-pills ml-auto">
+
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="#">About FS MMA</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="class_schedule.html">Classes</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="#">Contact Us</a>
+                    </li>
+                    <li class="nav-item mr-3">
+                        <a class="nav-link text-light" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        
+
+    </main>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
 
 </body>
 
