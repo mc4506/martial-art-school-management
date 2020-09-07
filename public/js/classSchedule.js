@@ -21,7 +21,7 @@ const generateTable = function () {
     const tableBody = $("tbody.schedule");
 
     // set a unique data-value for each table cell
-    let dataValue = 0;
+    let dataCellValue = 0;
 
     // first class at 10am
     let classTime = 10;
@@ -43,11 +43,11 @@ const generateTable = function () {
         for (let j = 0; j < 7; j++) {
             const tableData = $("<td>")
             // assign unique data value to each td cell
-            tableData.attr("data-value", dataValue);
+            tableData.attr("data-cellvalue", dataCellValue);
 
             // tableData.text(`day: ${j}, classTime: ${classTime}, value: ${dataValue}`);
             tableRow.append(tableData);
-            dataValue++;
+            dataCellValue++;
         }
         classTime++;
     }
@@ -56,15 +56,19 @@ const generateTable = function () {
 const displayClassSchedule = function (data) {
     
     for (let i = 0; i < data.length; i++) {
-        let sessionName = data[i].Session.sessionName;
-        let sessionId = data[i].id;
+        const sessionName = data[i].Session.sessionName;
+        const limit = data[i].Session.inPersonLimit;
+        const sessionId = data[i].id;
 
-        // get uniqueID based on day and time of class. Use this to populate the correct cell in the table
-        let tdID = (data[i].time - 10) * 7 + data[i].weekDay;
+        // get unique cell value based on day and time of class. Use this to populate the correct cell in the table
+        const tdID = (data[i].time - 10) * 7 + data[i].weekDay;
         // console.log(tdID);
+        // assign a unique sessionId to each non-empty table cell
+        const newDiv = $('<div class="classInfo">');
+        newDiv.text(`${sessionName} / In-Person limit of ${limit} people`);
 
-        $(`td[data-value=${tdID}]`).text(`${sessionName}`);
-
+        $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${sessionId}`);
+        $(`td[data-cellvalue=${tdID}]`).append(newDiv);
 
     }
 }

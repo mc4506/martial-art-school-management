@@ -2,7 +2,7 @@
 const db = require("../models");
 const passport = require("../config/passport");
 
-module.exports = function(app) {
+module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
@@ -20,15 +20,15 @@ module.exports = function(app) {
   app.post("/api/signup", (req, res) => {
     console.log(req.body);
     db.User.create({
-      memberStatus: 0,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      certLevel: parseInt(req.body.certLevel),
-      age: parseInt(req.body.age),
-      email: req.body.email,
-      phoneNumber: req.body.phone,
-      password: req.body.password
-    })
+        memberStatus: 0,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        certLevel: parseInt(req.body.certLevel),
+        age: parseInt(req.body.age),
+        email: req.body.email,
+        phoneNumber: req.body.phone,
+        password: req.body.password
+      })
       .then(() => {
         res.redirect(307, "/api/login");
       })
@@ -67,8 +67,30 @@ module.exports = function(app) {
   app.get("/api/class_schedule", (req, res) => {
     db.CalendarSessions.findAll({
       include: [db.Sessions]
-    }).then (function(results) {
+    }).then(function (results) {
+      res.json(results);
+    });
+  });
+
+  app.get("/api/class_schedule/:level/:isAdult", (req, res) => {
+    // console.log(req.params.level);
+    db.CalendarSessions.findAll({
+      include: {
+        model: db.Sessions,
+        where: {
+          level: req.params.level,
+          adultClass: req.params.isAdult
+        }
+      }
+    }).then(function (results) {
+      res.json(results);
+    });
+  });
+
+
+  app.get("/api/all_members", (req, res) => {
+    db.User.findAll().then(function (results) {
       res.json(results);
     })
-  })
+  });
 };
