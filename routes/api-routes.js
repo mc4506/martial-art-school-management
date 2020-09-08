@@ -107,36 +107,64 @@ module.exports = function (app) {
 
   app.post("/api/enroll", (req, res) => {
     // console.log(req.body);
-    req.body.data.forEach(e => {
+    req.body.data.forEach(async e => {
       // NEED TO QUERY TO FIND HOW MANY STUDENTS ARE ENROLLED IN EACH CLASS
       // THEN QUERY TO FIND EACH CLASS'S IN PERSON LIMITS
       // THEN CREATE A ROW IN USERSESSIONS IF THERE IS ROOM IN THE CLASS.
 
-      // db.UserSessions.findAll()
-      // .then()
-      // db.CalendarSessions.findOne({
-      //   where: {
-      //     id: e.CalendarSessionId
-      //   },  
-      //   include: {
-      //     model: db.Sessions,
-      //   }
-      // }).then( results => {
-      //   console.log(results);
-      // })
+      const numberOfStudents = await db.UserSessions.count({
+        where: {
+          CalendarSessionId: e.CalendarSessionId,
+        }
+      });
 
-      // console.log(classLimit);
-      db.UserSessions.create({
-        CalendarSessionId: e.CalendarSessionId,
-        UserId: e.UserId
-      }).then((results) => {
-        res.json();
-      }).catch((err) =>{
-        res.send(err);
-      })
+      console.log("number of students: " + numberOfStudents);
+
+
+      const limit = await findInPersonLimit(e.CalendarSessionId);
+
+      console.log("limit :" + limit);
+
+      if (numberOfStudents >= limit) {
+        res.json({
+          "message": "exceeded limit"
+        });
+      } else {
+        db.UserSessions.create({
+          CalendarSessionId: e.CalendarSessionId,
+          UserId: e.UserId
+        }).then(() => {
+          res.json();
+        }).catch((err) => {
+          res.send(err);
+        })
+      }
     });
-
   });
 
+  app.get("/api/classes/:memberId", (req, res) => {
+    db.UserSessions.findAll({
+      where: {
+        UserId: req.params.memberId
+      }
+    }).then(data => {
+      res.json(data)
+    }).catch(err => {
+      res.send(err);
+    })
+  })
 
+};
+
+const findInPersonLimit = async function (id) {
+  const queryResults = await db.CalendarSessions.findOne({
+    where: {
+      id: id
+    },
+    include: {
+      model: db.Sessions,
+    }
+  });
+  // console.log(queryResults);
+  return queryResults.Session.dataValues.inPersonLimit;
 };

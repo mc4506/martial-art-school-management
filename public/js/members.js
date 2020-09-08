@@ -44,6 +44,15 @@ $(document).ready(() => {
       .then( data => {
         // console.log(data);
         listEligibleClasses(data);
+      }).then( () => {
+        $.get(`/api/classes/${memberId}`)
+        .then((data) => {
+          if(data.length === 0) {
+            return;
+          } else {
+            displayEnrolledClasses(data);            
+          }
+        })
       });
     } else if (memberStatus === 1) {
       $('.is-teacher').removeClass('d-none');
@@ -101,6 +110,13 @@ const displayMembers = function(data) {
   })
 }
 
+const displayEnrolledClasses = function(data) {
+  data.forEach( e => {
+    $(`#calSession${e.CalendarSessionId}`).css("background", "#00DA28");
+    $(`#calSession${e.CalendarSessionId} input`).remove();
+  })
+}
+
 
 // click events
 $('#enrollBtn').on('click', event => {
@@ -120,8 +136,13 @@ $('#enrollBtn').on('click', event => {
   } else {
     console.log(newSessions);
     $.post("/api/enroll", {data: newSessions})
-    .then( () => {
-
+    .then( (data) => {
+      console.log(data);
+      if(data.message = "exceeded limit") {
+        $('#exceededLimitModal').modal('toggle');
+      } else {
+        location.reload();
+      }
     });
   }
 })
