@@ -3,7 +3,6 @@ $(document).ready(() => {
   const loginForm = $("form.login");
   const emailInput = $("#userEmail");
   const passwordInput = $("#userPassword");
-
   // When the form is submitted, we validate there's an email and password entered
   loginForm.on("submit", event => {
     event.preventDefault();
@@ -13,6 +12,7 @@ $(document).ready(() => {
     };
 
     if (!userData.email || !userData.password) {
+      alertMe("Input Error", "Wake UP!\n You forgot to push keys!!!!\n Try again!!\n You can DO IT!!!!")
       return;
     }
 
@@ -34,6 +34,15 @@ $(document).ready(() => {
       })
       .catch(err => {
         console.log(err);
+        alertMe(`Input Error: ${err.status} (${err.responseText})`, "Your password or email\n Does not match our record!!!!\n Access denied!!\n Try again!!!!")
       });
   }
 });
+// alert function
+function alertMe(header, message) {
+  // setting up recall of the appointment edit form in the modal
+  $(".modal-title").text(header);
+  $("#alertText").text(message);
+  $('#myModal').modal("show");
+}
+

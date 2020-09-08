@@ -120,6 +120,16 @@ const signUpUser = function (userdata) {
 }
 
 const handleLoginErr = function (err) {
-  $("#alert .msg").text(err.responseJSON);
-  $("#alert").fadeIn(500);
+  console.log(err.responseJSON.errors[0].message)
+  alertMe(`Input Error: ${err.status} (${err.responseJSON.errors[0].message})`, "Your email\n has a record already!\n Try again!!!!")
+  // $("#alert .msg").text(err.responseJSON);
+  // $("#alert").fadeIn(500);
+}
+
+function alertMe(header, message) {
+  // setting up recall of the appointment edit form in the modal
+  $(".modal-title").text(header);
+  $("#alertText").text(message);
+  // jQuery.noConflict();
+  $('#myModal').modal("show");
 }

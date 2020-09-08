@@ -7,6 +7,31 @@
 .themefont {
   font-family: 'machaCow';
 } */
+.modal-header {
+  background-color: #dc3545;
+  color: white;
+ 
+}
+
+.modal-body{
+  color: #dc3545;
+  display: flexbox;
+  flex-wrap: wrap;
+  height: fit-content;
+}
+
+#alertText{
+  text-align: center; 
+  float:left; 
+  width: 55%
+}
+
+.kick {
+  padding: 10px;
+  margin: 10px;
+  background-color: #e8f9ff;
+  color: #dc3545;
+}
 
 #myVideo {
   position: fixed;

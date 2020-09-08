@@ -139,4 +139,18 @@ module.exports = function (app) {
   });
 
 
+
+  app.get("/api/enrollto_class/:id", (req, res) => {
+    db.UserSessions.findAll({
+      where: {
+        CalendarSessionId: req.params.id
+      },
+      include: {
+        model: db.Users, attributes: ['firstName', 'lastName'],
+      }
+    }).then(function (results) {
+      res.json(results);
+    });
+  });
+
 };

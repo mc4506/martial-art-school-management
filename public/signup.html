@@ -95,7 +95,8 @@
         <input type="date" class="form-control" id="birthday" required>
       </div>
       <div class="form-group">
-        <label for="experienceLevel">Select your current belt rank if you have one, otherwise select "I don't have one"</label>
+        <label for="experienceLevel">Select your current belt rank if you have one, otherwise select "I don't have
+          one"</label>
         <select class="form-control" id="experienceLevel">
           <option>I don't have one</option>
           <option>White</option>
@@ -135,6 +136,28 @@
 
     </form>
   </main>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="text-align: left; "></h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <h3 id="alertText"></h3>
+          <img src="./imgs/Zid2.gif" alt="Attention!" style="float: right; width:40%">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
 
 
