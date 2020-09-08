@@ -28,7 +28,7 @@ module.exports = function (sequelize, DataTypes) {
     );
   });
   User.associate = function(models){
-    User.belongsToMany(models.Sessions, { through: "UserSessions" });
-  }
+    User.belongsToMany(models.CalendarSessions, { through: "UserSessions" });
+  };
   return User;
 };

@@ -64,9 +64,19 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/api/class_schedule", (req, res) => {
+  // get class schedule for current week
+  app.get("/api/class_schedule/:weekNumber", (req, res) => {
     db.CalendarSessions.findAll({
-      include: [db.Sessions]
+      include: [{
+          model: db.Sessions
+        },
+        {
+          model: db.CalendarDays,
+          where: {
+            weekNumber: req.params.weekNumber
+          }
+        }
+      ]
     }).then(function (results) {
       res.json(results);
     });
@@ -93,4 +103,39 @@ module.exports = function (app) {
       res.json(results);
     })
   });
+
+  app.post("/api/enroll", (req, res) => {
+    // console.log(req.body);
+    req.body.data.forEach(e => {
+      // NEED TO QUERY TO FIND HOW MANY STUDENTS ARE ENROLLED IN EACH CLASS
+      // THEN QUERY TO FIND EACH CLASS'S IN PERSON LIMITS
+      // THEN CREATE A ROW IN USERSESSIONS IF THERE IS ROOM IN THE CLASS.
+
+      // db.UserSessions.findAll()
+      // .then()
+      // db.CalendarSessions.findOne({
+      //   where: {
+      //     id: e.CalendarSessionId
+      //   },  
+      //   include: {
+      //     model: db.Sessions,
+      //   }
+      // }).then( results => {
+      //   console.log(results);
+      // })
+
+      // console.log(classLimit);
+      db.UserSessions.create({
+        CalendarSessionId: e.CalendarSessionId,
+        UserId: e.UserId
+      }).then((results) => {
+        res.json();
+      }).catch((err) =>{
+        res.send(err);
+      })
+    });
+
+  });
+
+
 };

@@ -14,12 +14,13 @@ const role = {
   "1": "teacher",
 };
 
+let memberId = null;
+
 $(document).ready(() => {
 
   let memberStatus = null;
   let rank = null;
   let isAdult = 1;
-  let memberId = null;
 
   $.get("/api/user_data").then(data => {
     $(".member-name").text(`${data.firstName}`);
@@ -41,7 +42,7 @@ $(document).ready(() => {
       // get eligible class based on level and isAdult
       $.get(`/api/class_schedule/${level}/${isAdult}`)
       .then( data => {
-        console.log(data);
+        // console.log(data);
         listEligibleClasses(data);
       });
     } else if (memberStatus === 1) {
@@ -74,7 +75,7 @@ const listEligibleClasses = function (results) {
   results.forEach(e => {
     const inputEl = $('<input class="form-check-input classInfo" type="checkbox">');
     // use checkbox value of SessionId to select class
-    inputEl.attr("value", `${e.SessionId}`);
+    inputEl.attr("value", `${e.id}`);
     $(`#calSession${e.id}`).prepend(inputEl);
     $(`#calSession${e.id}>.classInfo`).wrapAll('<div class="form-check"></div>')
     $(`#calSession${e.id}`).css("background", "#FFBA25");
@@ -106,8 +107,9 @@ $('#enrollBtn').on('click', event => {
   event.preventDefault();
   const newSessions=[];
   $('td input:checked').each( function() {
+    // console.log(this);
     const checkboxVal = {
-      SessionId: $(this).val(), 
+      CalendarSessionId: $(this).val(), 
       UserId: memberId
     }
     newSessions.push(checkboxVal);
@@ -116,8 +118,11 @@ $('#enrollBtn').on('click', event => {
   if (newSessions.length === 0) {
     return;
   } else {
-    // $.post("/api/enroll/", newSessions)
-    // .then();
+    console.log(newSessions);
+    $.post("/api/enroll", {data: newSessions})
+    .then( () => {
+
+    });
   }
 })
 

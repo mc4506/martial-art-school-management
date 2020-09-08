@@ -2,13 +2,18 @@ $(document).ready(function () {
 
     $("#currentMonth").text(moment().format("MMMM YYYY"));
     for (let i = 0; i < 7; i++) {
-        let dayOfWeek = moment().startOf("week").add(1 + i, "days").format("dddd M/D");
+        let dayOfWeek = moment().startOf("week").add(i, "days").format("dddd M/D");
         $(`#day${i}`).text(dayOfWeek);
-    }
+    };
+
+    // const dayOfWeek = moment().startOf("week").add(1, "days").format("YYYY-MM-DD");
+    // console.log(dayOfWeek);
+    const weekNumber = moment().week();
+    // console.log(moment("12/26/2020", "MM/DD/YYYY").week());
 
     generateTable();
 
-    $.get("/api/class_schedule")
+    $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
             console.log(data);
             displayClassSchedule(data);
@@ -58,16 +63,16 @@ const displayClassSchedule = function (data) {
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
         const limit = data[i].Session.inPersonLimit;
-        const sessionId = data[i].id;
+        const calSessionId = data[i].id;
 
         // get unique cell value based on day and time of class. Use this to populate the correct cell in the table
-        const tdID = (data[i].time - 10) * 7 + data[i].weekDay;
+        const tdID = (data[i].startTime - 10) * 7 + data[i].CalendarDay.dayOfWeek;
         // console.log(tdID);
         // assign a unique sessionId to each non-empty table cell
         const newDiv = $('<div class="classInfo">');
         newDiv.text(`${sessionName} / In-Person limit of ${limit} people`);
 
-        $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${sessionId}`);
+        $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);
         $(`td[data-cellvalue=${tdID}]`).append(newDiv);
 
     }
