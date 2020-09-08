@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="./stylesheets/style.css">
     <!-- Moment.js -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js"></script>
+    <!-- handlebars.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
     <link href="./stylesheets/style.css" rel="stylesheet">
     <link href="./stylesheets/kicks_style.css" rel="stylesheet">
 </head>
@@ -42,7 +44,7 @@
                         <br>
                         <p class="cool-font" for="topics">Choose a Topic:</p>
                         <figure id="topicChoice"></figure>
-                        
+
                         <br>
                         <p class="cool-font">Kick</p>
                         <textarea class="form-control" rows="3" id="kick-box"
@@ -54,11 +56,15 @@
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2">
                         <h2 class="cool-font">Kicks</h2>
+                        <script id="example-template" type="text/x-handlebars-template">
+                            {{#each people}}
+                              <p>{{firstName}} {{lastName}}</p>                        
+                            {{/each}}                          
+                        </script>
                         <hr>
-                        <div id="kicks-area"></div>
+                        <div id="kicks-area"></div>                       
                     </div>
-                </div>
-
+                </div>               
             </div>
         </div>
 

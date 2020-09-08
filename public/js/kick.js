@@ -1,6 +1,5 @@
 /* global moment */
 var userInfo;
-var kick = {};
 $(document).ready(() => {
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
@@ -13,33 +12,17 @@ $(document).ready(() => {
   getKicks(1);
 });
 
-
-function getUserName(num) {
-  $.get("/api/username/" + num)
-    .then(data => {
-      console.log(data);
-      return string(data)
-
-    })
-    .catch(function (err) {
-      return "";
-    })
-
-}
-
 $("#topicAdd").on("click", function (event) {
   event.preventDefault();
   if ($("#topic").val() === "") {
     alert("Enter something!")
     return;
   }
-  // Make a newChirp object
+  // Make a newTopic object
   var newTopic = {
     title: $("#topic").val().trim(),
   };
-
   console.log(newTopic);
-
   // Send an AJAX POST-request with jQuery
   $.post("/api/topicnew", newTopic)
     // On success, run the following code
@@ -50,7 +33,6 @@ $("#topicAdd").on("click", function (event) {
       $("#kicks-area").html("");
       $("#topics").val(1);
     });
-
 });
 
 function getTopics(boo) {
@@ -70,76 +52,71 @@ function getTopics(boo) {
   });
 }
 
-
 function getChangeTopic(){
   $("#kicks-area").html("");
   getKicks($("#topics").val());
 }
 
-
 function getKicks(num) {
-  let userName;
-
   $.get("/api/topic/" + num).then(data => {
     if (data.length !== 0) {
       for (var i = 0; i < data.length; i++) {
-        
-      
-        
-        $.post("/api/username", data[i])
-          .then(res => {
-            console.log(res);
+
+     
             var row = $("<div>");
             row.addClass("kick");
-            row.append("<p>" +res.name + " kicks.. </p>");
-            row.append("<p>" + res.message + "</p>");
-            row.append("<p>At " + moment(res.time).format("h:mma on dddd") + "</p>");
+            row.append("<p>" +data[i].User.firstName +' '+data[i].User.lastName+ " kicks.. </p>");
+            row.append("<p>" + data[i].message + "</p>");
+            row.append("<p>At " + moment(data[i].createdAt).format("h:mma on dddd") + "</p>");
             $("#kicks-area").prepend(row);
-
-          })
-         
-
       }
+      
+      var theTemplateScript = $("#example-template").html();
 
+  // Compile the template
+  var theTemplate = Handlebars.compile(theTemplateScript);
+
+  // This is the default context, which is passed to the template
+  var context = {
+    people: [ 
+      { firstName: 'Homer', lastName: 'Simpson' },
+      { firstName: 'Peter', lastName: 'Griffin' },
+      { firstName: 'Eric', lastName: 'Cartman' },
+      { firstName: 'Kenny', lastName: 'McCormick' },
+      { firstName: 'Bart', lastName: 'Simpson' }
+    ]
+  };
+
+  // Pass our data to the template
+  var theCompiledHtml = theTemplate(context);
+
+  // Add the compiled html to the page
+  $("#kicks-area").append(theCompiledHtml);
     }
-
   });
-
-
-
-
-
 };
-
-
-
 
 // When user clicks add-btn
 $("#kick-submit").on("click", function (event) {
   event.preventDefault();
 
-  // Make a newChirp object
+  // Make a newKick object
   var newKick = {
     message: $("#kick-box").val().trim(),
     UserId: userInfo.id,
     KickTopicId: $("select option:selected").val(),
   };
   var dateNow = new Date();
-
   // Send an AJAX POST-request with jQuery
   $.post("/api/kicknew", newKick)
     // On success, run the following code
     .then(function () {
-
       var row = $("<div>");
       row.addClass("kick");
-
       row.append("<p>" + userInfo.firstName +" "+ userInfo.lastName + " kicked: </p>");
       row.append("<p>" + newKick.message + "</p>");
       row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
-
       $("#kicks-area").prepend(row);
-
     });
 
   // Empty each input box by replacing the value with an empty string
@@ -147,4 +124,4 @@ $("#kick-submit").on("click", function (event) {
   $("#kick-box").val("");
 });
 
-// When the page loads, grab all of our chirps
+// When the page loads, grab all of our kicks
