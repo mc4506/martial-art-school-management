@@ -7,7 +7,7 @@ $(document).ready(() => {
   $.get("/api/user_data").then(data => {
     console.log(data);
     userInfo = data;
-    $("span.member").text(userInfo.name);
+    $("span.member").text(userInfo.firstName +" "+ userInfo.lastName );
   });
   getTopics(1);
   getKicks(1);
@@ -134,7 +134,7 @@ $("#kick-submit").on("click", function (event) {
       var row = $("<div>");
       row.addClass("kick");
 
-      row.append("<p>" + userInfo.name + " kicked: </p>");
+      row.append("<p>" + userInfo.firstName +" "+ userInfo.lastName + " kicked: </p>");
       row.append("<p>" + newKick.message + "</p>");
       row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
 
