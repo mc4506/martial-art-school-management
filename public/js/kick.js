@@ -60,31 +60,24 @@ function getChangeTopic(){
 function getKicks(num) {
   $.get("/api/topic/" + num).then(data => {
     if (data.length !== 0) {
+      let oneKick={};
+      let kicks=[];
       for (var i = 0; i < data.length; i++) {
-
-     
-            var row = $("<div>");
-            row.addClass("kick");
-            row.append("<p>" +data[i].User.firstName +' '+data[i].User.lastName+ " kicks.. </p>");
-            row.append("<p>" + data[i].message + "</p>");
-            row.append("<p>At " + moment(data[i].createdAt).format("h:mma on dddd") + "</p>");
-            $("#kicks-area").prepend(row);
-      }
-      
+        oneKick={
+          name: data[i].User.firstName +' '+data[i].User.lastName+" kicks.. ",
+          message: data[i].message,
+          time: moment(data[i].createdAt).format("h:mma on dddd")
+        }
+        kicks.push(oneKick)
+      }   
       var theTemplateScript = $("#example-template").html();
 
   // Compile the template
   var theTemplate = Handlebars.compile(theTemplateScript);
-
+  
   // This is the default context, which is passed to the template
   var context = {
-    people: [ 
-      { firstName: 'Homer', lastName: 'Simpson' },
-      { firstName: 'Peter', lastName: 'Griffin' },
-      { firstName: 'Eric', lastName: 'Cartman' },
-      { firstName: 'Kenny', lastName: 'McCormick' },
-      { firstName: 'Bart', lastName: 'Simpson' }
-    ]
+    kicks: kicks
   };
 
   // Pass our data to the template
