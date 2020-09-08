@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Kicks Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./stylesheets/style.css">
+    <!-- Moment.js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.16.0/moment.min.js"></script>
+    <link href="./stylesheets/style.css" rel="stylesheet">
+    <link href="./stylesheets/kicks_style.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- PIN ME TO THE TOP-->
+    <nav class="navbar bg-danger">
+        <div class="navbar-header">
+            <a class="navbar-brand text-white font-weight-bold" href="/logout">
+                Logout
+            </a>
+        </div>
+    </nav>
+
+    <!-- FLOAT ME IN THE CENTER-->
+
+    <main class="container">
+
+        <h2 class="display-4 font-weight-bold">Welcome <span class="member"></span></h2>
+
+        <div class="jumbotron jumbotron-fluid bg-transparent">
+            <div class="text-light align-middle">
+                <video autoplay muted loop id="myVideo">
+                    <source src="./imgs/mma.mov" type="video/mp4">
+                </video>
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <br>
+                        <input type="text" class="form-control" id="topic" placeholder="Add new topic">
+                        <button id="topicAdd" class="btn btn-lg pull-right">Add</button>
+                        <br>
+                        <p class="cool-font" for="topics">Choose a Topic:</p>
+                        <figure id="topicChoice"></figure>
+                        
+                        <br>
+                        <p class="cool-font">Kick</p>
+                        <textarea class="form-control" rows="3" id="kick-box"
+                            placeholder="Enter your Kick Here!"></textarea>
+                        <button id="kick-submit" class="btn btn-lg pull-right">Submit!</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <h2 class="cool-font">Kicks</h2>
+                        <hr>
+                        <div id="kicks-area"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+    <!-- PIN ME TO THE BOTTOM-->
+    <div class="p-3 mb-2 bg-danger text-white">
+        <div class="d-flex flex-row justify-content-around">
+            <p class="text-white">Contact Us:</p>
+            <a class="text-white" href="mailto:jmc846@scarletmail.rutgers.gmail.com">Jonathan Cobb</a>
+            <a class="text-white" href="mailto:placeholder@email.com">Michael Chen</a>
+            <a class="text-white" href="mailto:nlamonaco86@gmail.com">Nicholas La Monaco</a>
+            <a class="text-white" href="mailto:sbolotnikov@gmail.com">Sergey Bolotnikov</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="./js/kick.js"></script>
+</body>
+
+</html>
