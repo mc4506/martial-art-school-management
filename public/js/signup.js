@@ -34,7 +34,7 @@ $(document).ready(function () {
           "certLevel": certLevel,
           "phone": phoneNumber,
           "email": email,
-          "password": password
+          "password": password,
         };
 
         // console.log(userData)

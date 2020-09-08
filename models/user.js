@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 // Creating our User model
 module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define("User", {
-    memberStatus: { type: DataTypes.INTEGER, allowNull: false},
+    memberStatus: { type: DataTypes.INTEGER, allowNull: false, default: 0},
     firstName: { type: DataTypes.STRING, allowNull: false },
     lastName: { type: DataTypes.STRING, allowNull: false },
     certLevel: {type: DataTypes.INTEGER, allowNull: false },
@@ -13,6 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     phoneNumber: { type: DataTypes.STRING, allowNull: false },
     password: { type: DataTypes.STRING, allowNull: false }
   });
+
   // Creating a custom method for our User model. This will check if an unhashed password entered by the user can be compared to the hashed password stored in our database
   User.prototype.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
@@ -26,10 +27,8 @@ module.exports = function (sequelize, DataTypes) {
       null
     );
   });
-
-  User.associate = function(models) {
-    // Associating User with Kicks
-    // When an User is deleted, also delete any associated Posts
+  User.associate = function(models){
+    User.belongsToMany(models.CalendarSessions, { through: "UserSessions" });
     User.hasMany(models.Kick, {
       onDelete: "cascade"
     });

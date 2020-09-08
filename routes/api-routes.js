@@ -20,15 +20,15 @@ module.exports = function (app) {
   app.post("/api/signup", (req, res) => {
     console.log(req.body);
     db.User.create({
-      memberStatus: 0,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      certLevel: parseInt(req.body.certLevel),
-      age: parseInt(req.body.age),
-      email: req.body.email,
-      phoneNumber: req.body.phone,
-      password: req.body.password
-    })
+        memberStatus: 0,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        certLevel: parseInt(req.body.certLevel),
+        age: parseInt(req.body.age),
+        email: req.body.email,
+        phoneNumber: req.body.phone,
+        password: req.body.password
+      })
       .then(() => {
         res.redirect(307, "/api/login");
       })
@@ -50,17 +50,93 @@ module.exports = function (app) {
       // The user is not logged in, send back an empty object
       res.json({});
     } else {
+      console.log(req.user);
       // Otherwise send back the user's email and id
       // Sending back a password, even a hashed password, isn't a good idea
       res.json({
-        memberStatus: req.user.memberStatus,
-        name: req.user.firstName+' '+req.user.lastName,
-        certLevel: req.user.certLevel,
-        age: req.user.age,
-        phoneNumber: req.user.phone,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
         email: req.user.email,
+        phoneNumber: req.user.phoneNumber,
+        certLevel: req.user.certLevel,
+        memberStatus: req.user.memberStatus,
         id: req.user.id
       });
     }
   });
+
+  // get class schedule for current week
+  app.get("/api/class_schedule/:weekNumber", (req, res) => {
+    db.CalendarSessions.findAll({
+      include: [{
+          model: db.Sessions
+        },
+        {
+          model: db.CalendarDays,
+          where: {
+            weekNumber: req.params.weekNumber
+          }
+        }
+      ]
+    }).then(function (results) {
+      res.json(results);
+    });
+  });
+
+  app.get("/api/class_schedule/:level/:isAdult", (req, res) => {
+    // console.log(req.params.level);
+    db.CalendarSessions.findAll({
+      include: {
+        model: db.Sessions,
+        where: {
+          level: req.params.level,
+          adultClass: req.params.isAdult
+        }
+      }
+    }).then(function (results) {
+      res.json(results);
+    });
+  });
+
+
+  app.get("/api/all_members", (req, res) => {
+    db.User.findAll().then(function (results) {
+      res.json(results);
+    })
+  });
+
+  app.post("/api/enroll", (req, res) => {
+    // console.log(req.body);
+    req.body.data.forEach(e => {
+      // NEED TO QUERY TO FIND HOW MANY STUDENTS ARE ENROLLED IN EACH CLASS
+      // THEN QUERY TO FIND EACH CLASS'S IN PERSON LIMITS
+      // THEN CREATE A ROW IN USERSESSIONS IF THERE IS ROOM IN THE CLASS.
+
+      // db.UserSessions.findAll()
+      // .then()
+      // db.CalendarSessions.findOne({
+      //   where: {
+      //     id: e.CalendarSessionId
+      //   },  
+      //   include: {
+      //     model: db.Sessions,
+      //   }
+      // }).then( results => {
+      //   console.log(results);
+      // })
+
+      // console.log(classLimit);
+      db.UserSessions.create({
+        CalendarSessionId: e.CalendarSessionId,
+        UserId: e.UserId
+      }).then((results) => {
+        res.json();
+      }).catch((err) =>{
+        res.send(err);
+      })
+    });
+
+  });
+
+
 };

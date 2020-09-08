@@ -29,15 +29,13 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false
       }
     });
-  };
-  Kick.associate = function(models) {
-    
     Kick.belongsTo(models.KickTopic, {
       foreignKey: {
       allowNull: false
       }
     });
   };
+  
 
   return Kick;
 };
