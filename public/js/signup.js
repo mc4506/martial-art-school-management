@@ -15,6 +15,7 @@ $(document).ready(function () {
       const phoneNumber = $("#phoneNumber").val().trim();
       const email = $("#signUpEmail").val().trim();
       const password = $("#signUpPassword").val().trim();
+      const confirm = $("#confirmPassword").val().trim();
 
       const age = convertBdayToAge(birthday);
       // console.log(age);
@@ -26,7 +27,7 @@ $(document).ready(function () {
       const validEmail = validateEmail(email);
       const validPhone = validatePhoneNumber(phoneNumber);
 
-      if (validPassword && validEmail && validPhone) {
+      if (validPassword && validEmail && validPhone && password === confirm) {
         const userData = {
           "firstName": firstName,
           "lastName": lastName,
