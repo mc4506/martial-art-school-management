@@ -83,19 +83,25 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/api/class_schedule/:level/:isAdult", (req, res) => {
+  app.get("/api/class_schedule/:level/:isAdult", async (req, res) => {
     // console.log(req.params.level);
-    db.CalendarSessions.findAll({
-      include: {
-        model: db.Sessions,
-        where: {
-          level: req.params.level,
-          adultClass: req.params.isAdult
+    try {
+      const results = await db.CalendarSessions.findAll({
+        include: {
+          model: db.Sessions,
+          where: {
+            level: req.params.level,
+            adultClass: req.params.isAdult
+          }
         }
-      }
-    }).then(function (results) {
-      res.json(results);
-    });
+      });
+      // check if classes are full. If full add a flag to an updatedResults array
+      const data = await updateResults(results);
+      // console.log(data);
+      res.json(data);
+    } catch (err) {
+      res.json(err);
+    }
   });
 
 
@@ -106,26 +112,13 @@ module.exports = function (app) {
   });
 
   app.post("/api/enroll", (req, res) => {
+
     // console.log(req.body);
     req.body.data.forEach(async e => {
-      // NEED TO QUERY TO FIND HOW MANY STUDENTS ARE ENROLLED IN EACH CLASS
-      // THEN QUERY TO FIND EACH CLASS'S IN PERSON LIMITS
-      // THEN CREATE A ROW IN USERSESSIONS IF THERE IS ROOM IN THE CLASS.
 
-      const numberOfStudents = await db.UserSessions.count({
-        where: {
-          CalendarSessionId: e.CalendarSessionId,
-        }
-      });
+      const reachedlimit = await hasReachedInPersonLimit(e.CalendarSessionId);
 
-      console.log("number of students: " + numberOfStudents);
-
-
-      const limit = await findInPersonLimit(e.CalendarSessionId);
-
-      console.log("limit :" + limit);
-
-      if (numberOfStudents >= limit) {
+      if (reachedlimit) {
         res.json({
           "message": "exceeded limit"
         });
@@ -152,11 +145,29 @@ module.exports = function (app) {
     }).catch(err => {
       res.send(err);
     })
-  })
+  });
 
+  app.get("/api/enrollto_class/:id", (req, res) => {
+    db.UserSessions.findAll({
+      where: {
+        CalendarSessionId: req.params.id
+      }
+    }).then(function (users) {
+      getAllStudents(users)
+      .then( students => {
+        res.json(students);
+      });   
+    });
+  });
 };
 
-const findInPersonLimit = async function (id) {
+const hasReachedInPersonLimit = async function (id) {
+
+  const numberOfStudents = await db.UserSessions.count({
+    where: {
+      CalendarSessionId: id,
+    }
+  });
   const queryResults = await db.CalendarSessions.findOne({
     where: {
       id: id
@@ -166,5 +177,38 @@ const findInPersonLimit = async function (id) {
     }
   });
   // console.log(queryResults);
-  return queryResults.Session.dataValues.inPersonLimit;
+  if (numberOfStudents >= queryResults.Session.dataValues.inPersonLimit) {
+    console.log(`class ${id} has reached limit`);
+    return true;
+  } else return false;
 };
+
+const updateResults = async function (results) {
+  const updatedResults = [];
+
+  for (const result of results) {
+    if (await hasReachedInPersonLimit(result.id)) {
+      result.dataValues["reachedLimit"] = true;
+      // console.log(result);
+      updatedResults.push(result);
+    } else {
+      updatedResults.push(result);
+    }
+    // console.log(updatedResults);
+  }
+  return updatedResults;
+}
+
+const getAllStudents = async function (users) {
+  const students = [];
+
+  for (const user of users) {
+    const student = await db.User.findOne({
+      where: {
+        id: user.dataValues.UserId
+      }
+    });
+    students.push(student);
+  };
+  return students;
+}

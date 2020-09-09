@@ -8,6 +8,10 @@
   font-family: 'machaCow';
 } */
 
+.class-info-hover {
+  background: #aaaaaa;
+}
+
 #myVideo {
   position: fixed;
   top: 36px;
