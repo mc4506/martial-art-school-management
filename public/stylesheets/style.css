@@ -33,6 +33,10 @@
   color: #dc3545;
 }
 
+.class-info-hover {
+  background: #aaaaaa;
+}
+
 #myVideo {
   position: fixed;
   top: 36px;
