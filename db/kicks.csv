@@ -1,0 +1,5 @@
+"id";"message";"createdAt";"updatedAt";"UserId";"KickTopicId"
+1;"test my kick";"2020-09-08 00:43:59";"2020-09-08 00:43:59";1;2
+2;"my database kicks";"2020-09-08 00:46:34";"2020-09-08 00:46:34";1;1
+3;"this is the master kicking";"2020-09-08 00:47:42";"2020-09-08 00:47:42";6;2
+4;"Class is cancelled";"2020-09-09 23:00:47";"2020-09-09 23:00:47";6;3
