@@ -1,6 +1,6 @@
 $(document).ready(function () {
   const signUpForm = $("form.signup");
-
+  addModal();
   // using jquery mask plugin from http://igorescobar.github.io/jQuery-Mask-Plugin/
   $('#phoneNumber').mask('000-000-0000');
 
@@ -124,12 +124,4 @@ const handleLoginErr = function (err) {
   alertMe(`Input Error: ${err.status} (${err.responseJSON.errors[0].message})`, "Your email\n has a record already!\n Try again!!!!")
   // $("#alert .msg").text(err.responseJSON);
   // $("#alert").fadeIn(500);
-}
-
-function alertMe(header, message) {
-  // setting up recall of the appointment edit form in the modal
-  $(".modal-title").text(header);
-  $("#alertText").text(message);
-  // jQuery.noConflict();
-  $('#myModal').modal("show");
 }

@@ -1,6 +1,7 @@
 $(document).ready(() => {
   // This file just does a GET request to figure out which user is logged in
   // and updates the HTML on the page
+  addModal();
   $.get("/api/user_data").then(data => {
     console.log(data);
     userInfo = data;
@@ -10,14 +11,6 @@ $(document).ready(() => {
   getKicks(1);
 });
 var userInfo;
-function alertMe(header, message) {
-  // setting up recall of the appointment edit form in the modal
-  $(".modal-title").text(header);
-  $("#alertText").text(message);
-  // jQuery.noConflict();
-  $('#myModal').modal("show");
-}
-
 
 $("#topicAdd").on("click", function (event) {
   event.preventDefault();

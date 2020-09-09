@@ -1,4 +1,5 @@
 $(document).ready(() => {
+  addModal();
   // Getting references to our form and inputs
   const loginForm = $("form.login");
   const emailInput = $("#userEmail");
@@ -38,11 +39,3 @@ $(document).ready(() => {
       });
   }
 });
-// alert function
-function alertMe(header, message) {
-  // setting up recall of the appointment edit form in the modal
-  $(".modal-title").text(header);
-  $("#alertText").text(message);
-  $('#myModal').modal("show");
-}
-
