@@ -201,7 +201,7 @@ const updateResults = async function (results) {
 
 const getAllStudents = async function (users) {
   const students = [];
-
+  
   for (const user of users) {
     const student = await db.User.findOne({
       where: {

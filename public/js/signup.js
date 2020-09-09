@@ -1,6 +1,6 @@
 $(document).ready(function () {
   const signUpForm = $("form.signup");
-
+  addModal();
   // using jquery mask plugin from http://igorescobar.github.io/jQuery-Mask-Plugin/
   $('#phoneNumber').mask('000-000-0000');
 
@@ -120,6 +120,8 @@ const signUpUser = function (userdata) {
 }
 
 const handleLoginErr = function (err) {
-  $("#alert .msg").text(err.responseJSON);
-  $("#alert").fadeIn(500);
+  console.log(err.responseJSON.errors[0].message)
+  alertMe(`Input Error: ${err.status} (${err.responseJSON.errors[0].message})`, "Your email\n has a record already!\n Try again!!!!")
+  // $("#alert .msg").text(err.responseJSON);
+  // $("#alert").fadeIn(500);
 }
