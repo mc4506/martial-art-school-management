@@ -69,7 +69,7 @@ const displayClassSchedule = function (data) {
         const tdID = (data[i].startTime - 10) * 7 + data[i].CalendarDay.dayOfWeek;
         // console.log(tdID);
         // assign a unique sessionId to each non-empty table cell
-        const newDiv = $('<div class="classInfo">');
+        const newDiv = $('<div class="class-info">');
         newDiv.text(`${sessionName} / In-Person limit of ${limit} people`);
 
         $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);

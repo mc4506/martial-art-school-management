@@ -22,6 +22,7 @@ $(document).ready(() => {
   let rank = null;
   let isAdult = 1;
 
+  // display Member info
   $.get("/api/user_data").then(data => {
     $(".member-name").text(`${data.firstName}`);
     $(".member-email").text(`${data.email}`);
@@ -34,6 +35,7 @@ $(document).ready(() => {
     memberStatus = data.memberStatus;
   })
   .then(() => {
+    // If member is a student
     if (memberStatus === 0) {
       // unhide enrolled and eligible class Div
       $('.is-member').removeClass('d-none');
@@ -42,9 +44,20 @@ $(document).ready(() => {
       // get eligible class based on level and isAdult
       $.get(`/api/class_schedule/${level}/${isAdult}`)
       .then( data => {
-        // console.log(data);
+        console.log(data);
         listEligibleClasses(data);
+        listReachedLimitClasses(data);
+      }).then( () => {
+        $.get(`/api/classes/${memberId}`)
+        .then((data) => {
+          if(data.length === 0) {
+            return;
+          } else {
+            displayEnrolledClasses(data);            
+          }
+        })
       });
+    // If member is a teacher
     } else if (memberStatus === 1) {
       $('.is-teacher').removeClass('d-none');
 
@@ -52,8 +65,30 @@ $(document).ready(() => {
       .then( data => {
         console.log(data);
         displayMembers(data);
-      })
-    }
+      }).then( () => {
+        // TODO: DISPLAY member classes
+        // TODO: DISPLAY member attendance
+      }).then( () => {
+        $('td > .class-info').css("cursor", "pointer");
+        $('td > .class-info').hover( function() {
+          $(this).parent().addClass("class-info-hover");
+        }, function() {
+          $(this).parent().removeClass("class-info-hover");
+        });
+
+        // Click on table cell to display who is enrolled in that class and check off student's attendance for that class
+        $('td > .class-info').on('click', function(event) {
+          const id = $(this).parent().attr("id").slice(10);
+          console.log(id);
+          $.get(`/api/enrollto_class/${id}`).then( results => {
+            // console.log(results);
+            $('#studentsModal').modal('toggle');
+            $('ul.student-list').attr("data-calSession", id);
+            displayStudents(results);
+          })
+        })
+      });
+    };
   });
 });
 
@@ -70,18 +105,31 @@ const getEligibleClassLevel = function (rank) {
   }
 };
 
+
 const listEligibleClasses = function (results) {
 
   results.forEach(e => {
-    const inputEl = $('<input class="form-check-input classInfo" type="checkbox">');
+    const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
     // use checkbox value of SessionId to select class
     inputEl.attr("value", `${e.id}`);
     $(`#calSession${e.id}`).prepend(inputEl);
-    $(`#calSession${e.id}>.classInfo`).wrapAll('<div class="form-check"></div>')
+    $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
     $(`#calSession${e.id}`).css("background", "#FFBA25");
   })
 }
 
+const listReachedLimitClasses = function(results) {
+  results.forEach(e => {
+    if(e.hasOwnProperty("reachedLimit")) {
+      const newDiv = $('<div style="background: red">Class is Full</div>')
+      $(`#calSession${e.id} input`).remove();
+      $(`#calSession${e.id}`).prepend(newDiv);
+      $(`#calSession${e.id}`).css("background", "#333333");
+    }
+  })
+}
+
+// list all school members
 const displayMembers = function(data) {
   data.forEach( e => {
     const tableRow = $('<tr>');
@@ -98,6 +146,33 @@ const displayMembers = function(data) {
 
     $('tbody.members').append(tableRow);
     tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd);
+  })
+}
+
+// list students of a particular class
+const displayStudents = function(data) {
+  $('ul.student-list').html("")
+  data.forEach(e => {
+    const listItemEl = $('<li class="list-group-item">');
+    const formCheckEl = $('<div class="form-check"></div>');
+    const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
+    const labelEl = $('<label class="form-check-label">');
+    // assign userId to checkbox value
+    inputEl.attr("value", `${e.id}`);
+    inputEl.attr("id", `student${e.id}`);
+    const memberRank = belt[e.certLevel];
+    labelEl.text(`${e.firstName} ${e.lastName} - ${memberRank} belt`);
+    labelEl.attr("for", `student${e.id}`);
+    listItemEl.append(formCheckEl);
+    formCheckEl.append(inputEl, labelEl);
+    $('ul.student-list').append(listItemEl);
+  })
+}
+
+const displayEnrolledClasses = function(data) {
+  data.forEach( e => {
+    $(`#calSession${e.CalendarSessionId}`).css("background", "#00DA28");
+    $(`#calSession${e.CalendarSessionId} input`).remove();
   })
 }
 
@@ -120,8 +195,13 @@ $('#enrollBtn').on('click', event => {
   } else {
     console.log(newSessions);
     $.post("/api/enroll", {data: newSessions})
-    .then( () => {
-
+    .then( (data) => {
+      console.log(data);
+      if(data.message = "exceeded limit") {
+        $('#exceededLimitModal').modal('toggle');
+      } else {
+        location.reload();
+      }
     });
   }
 })
@@ -147,5 +227,6 @@ $('.show-schedule').on('click', function() {
 
   $('.show-schedule').addClass('active');
   $('.show-members').removeClass('active');
-  
 })
+
+// TODO Post attendance click event and api route to update UserSession attendance
