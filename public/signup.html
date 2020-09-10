@@ -20,7 +20,7 @@
       <a class="navbar-brand" href="#">
         <img src="./imgs/martial-arts-square.png" width="100" height="100" class="d-inline-block align-middle"
           alt="FS MMA logo" loading="lazy">
-        <h1 class="d-inline align-middle">FS MMA</h1>
+        <h1 class="d-inline align-middle display-4">FS MMA</h1>
       </a>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
@@ -75,72 +75,78 @@
     </nav>
   </header>
 
-  <main class="container">
-    <h1 class="mt-2">
-      Sign Up for Full Stack MMA
-    </h1>
-    <div class="alert alert-warning d-none" role="alert">
-      <strong>Invalid form entries</strong> See below for fields that needs correction.
-    </div>
-    <form class="signup">
-      <div class="form-group">
-        <label for="firstName">First name</label>
-        <input type="text" class="form-control" id="firstName" required>
-      </div>
-      <div class="form-group">
-        <label for="lastName">Last name</label>
-        <input type="text" class="form-control" id="lastName" required>
-      </div>
-      <div class="form-group">
-        <label for="birthday">Enter your birthday</label>
-        <input type="date" class="form-control" id="birthday" required>
-      </div>
-      <div class="form-group">
-        <label for="experienceLevel">Select your current belt rank if you have one, otherwise select "I don't have
-          one"</label>
-        <select class="form-control" id="experienceLevel">
-          <option>I don't have one</option>
-          <option>White</option>
-          <option>Blue</option>
-          <option>Yellow</option>
-          <option>Green</option>
-          <option>Red</option>
-          <option>Brown</option>
-          <option>Black</option>
-        </select>
-        <small class="form-text text-muted">
-          We will verify your experience level during the first day of class.
-        </small>
-      </div>
-
-
-      <div class="form-group">
-        <label for="phoneNumber">Phone number</label>
-        <input type="tel" class="form-control" id="phoneNumber" required>
-        <small id="phoneHelpBlock" class="form-text text-muted">This is a required field. 123-456-7890</small>
-      </div>
-
-      <div class="form-group">
-        <label for="signUpEmail">Email address</label>
-        <input type="email" class="form-control" id="signUpEmail" required>
-        <small id="emailHelpBlock" class="form-text text-muted">Your email will be used for future login</small>
-      </div>
-      <div class="form-group">
-        <label for="signUpPassword">Enter a password</label>
-        <input type="password" class="form-control" id="signUpPassword" required>
-        <small id="passwordHelpBlock" class="form-text text-muted">
-          Password should be at least 8 characters and include at least one number and at least one Uppercase character
-        </small>
-        <div class="form-group">
-          <label for="confirmPassword">Confirm Password:</label>
-          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" minlength="8"
-            required>
+  <main class="container mb-5">
+    <div class="row">
+      <div class="col-lg-6">
+        <h1 class="mt-3">
+          Sign Up for Full Stack MMA
+        </h1>
+        <div class="alert alert-warning d-none" role="alert">
+          <strong>Invalid form entries</strong> See below for fields that needs correction.
         </div>
+        <form class="signup">
+          <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" class="form-control" id="firstName" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" class="form-control" id="lastName" required>
+          </div>
+          <div class="form-group">
+            <label for="birthday">Enter your birthday</label>
+            <input type="date" class="form-control" id="birthday" required>
+          </div>
+          <div class="form-group">
+            <label for="experienceLevel">Select your current belt rank if you have one, otherwise select "I don't have
+              one"</label>
+            <select class="form-control" id="experienceLevel">
+              <option>I don't have one</option>
+              <option>White</option>
+              <option>Blue</option>
+              <option>Yellow</option>
+              <option>Green</option>
+              <option>Red</option>
+              <option>Brown</option>
+              <option>Black</option>
+            </select>
+            <small class="form-text text-muted">
+              We will verify your experience level during the first day of class.
+            </small>
+          </div>
+
+
+          <div class="form-group">
+            <label for="phoneNumber">Phone number</label>
+            <input type="tel" class="form-control" id="phoneNumber" required>
+            <small id="phoneHelpBlock" class="form-text text-muted">This is a required field. 123-456-7890</small>
+          </div>
+
+          <div class="form-group">
+            <label for="signUpEmail">Email address</label>
+            <input type="email" class="form-control" id="signUpEmail" required>
+            <small id="emailHelpBlock" class="form-text text-muted">Your email will be used for future login</small>
+          </div>
+          <div class="form-group">
+            <label for="signUpPassword">Enter a password</label>
+            <input type="password" class="form-control" id="signUpPassword" required>
+            <small id="passwordHelpBlock" class="form-text text-muted">
+              Password should be at least 8 characters and include at least one number and at least one Uppercase
+              character
+            </small>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password:</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" minlength="8"
+                required>
+            </div>
+          </div>
+          <button type="submit" class="btn-lg btn-danger" id="registerBtn">Register</button>
+        </form>
       </div>
-
-      <button type="submit" class="btn btn-danger" id="registerBtn">Register</button>
-
-    </form>
+      <div class="mt-3 col-lg-6 ">
+        <img src="./imgs/signupsplash.jpg" class="img-fluid">
+      </div>
+    </div>
   </main>
 
   <!-- Modal -->
