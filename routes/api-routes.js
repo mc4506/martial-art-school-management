@@ -56,6 +56,7 @@ module.exports = function (app) {
       res.json({
         firstName: req.user.firstName,
         lastName: req.user.lastName,
+        age: req.user.age,
         email: req.user.email,
         phoneNumber: req.user.phoneNumber,
         certLevel: req.user.certLevel,
@@ -91,10 +92,11 @@ module.exports = function (app) {
           model: db.Sessions,
           where: {
             level: req.params.level,
-            adultClass: req.params.isAdult
+            adultclass: req.params.isAdult
           }
         }
       });
+      console.log(results);
       // check if classes are full. If full add a flag to an updatedResults array
       const data = await updateResults(results);
       // console.log(data);

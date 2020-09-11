@@ -25,7 +25,7 @@ module.exports = function (sequelize, DataTypes) {
       user.password,
       bcrypt.genSaltSync(10),
       null
-    );
+    );eDSAfdgadfssdafdsaferqrewqr
   });
   User.associate = function(models){
     User.belongsToMany(models.CalendarSessions, { through: "UserSessions" });
