@@ -2,7 +2,7 @@
   "development": {
     "use_env_variable": "LOCALDB",
     "username": "root",
-    "password": "Nicky0416!",
+    "password": "asdf1234",
     "database": "mma_db",
     "host": "127.0.0.1",
     "dialect": "mysql"
