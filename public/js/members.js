@@ -152,15 +152,23 @@ const displayMembers = function(data) {
   data.forEach( e => {
     const tableRow = $('<tr>');
     const idTd = $(`<td>${e.id}</td>`);
+    idTd.attr("id", `student${e.id}`);
     const memberRole = role[e.memberStatus];
     const roleTd = $(`<td>${memberRole}</td>`);
+    roleTd.attr("id", `student${e.id}-role`);
     const firstNameTd = $(`<td>${e.firstName}</td>`);
+    firstNameTd.attr("id", `student${e.id}-firstName`);
     const lastNameTd = $(`<td>${e.lastName}</td>`);
+    lastNameTd.attr("id", `student${e.id}-lastName`);
     const ageTd = $(`<td>${e.age}</td>`);
+    ageTd.attr("id", `student${e.id}-age`);
     const emailTd = $(`<td>${e.email}</td>`);
+    emailTd.attr("id", `student${e.id}-email`);
     const phoneTd = $(`<td>${e.phoneNumber}</td>`);
+    phoneTd.attr("id", `student${e.id}-phone`);
     const memberRank = belt[e.certLevel];
     const beltTd = $(`<td>${memberRank}</td>`);
+    beltTd.attr("id", `student${e.id}-belt`);
 
     $('tbody.members').append(tableRow);
     tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd);
@@ -242,19 +250,14 @@ const addSession = function(teacherId, dataDateValue, dataTimeValue){
       level: level,
       inPersonLimit: inPersonLimit,
       teacherId: teacherId,
-    }
-
-    console.log(newSession);
-    postNewSession(newSession);
-
-    const sessionCalendarInfo = {
       startTime: dataTimeValue,
       dayOfWeek: dayOfWeek,
       startDate: startDate,
       endDate: endDate
     }
-    console.log(sessionCalendarInfo);
-    postNewCalendarSession(sessionCalendarInfo);
+
+    console.log(newSession);
+    postNewSession(newSession);
 
   })
 }
@@ -290,13 +293,6 @@ $('#enrollBtn').on('click', event => {
 
 const postNewSession = function(session) {
   $.post("/api/new_session", session)
-    .then( function(data) {
-
-    })
-}
-
-const postNewCalendarSession = function(calendarInfo) {
-  $.post("/api/new_session/calendarinfo",calendarInfo)
     .then( function(data) {
 
     })
