@@ -4,7 +4,7 @@ module.exports = function (sequelize, DataTypes) {
     });
 
     CalendarSessions.associate = function(models) {
-        CalendarSessions.belongsToMany(models.User, { through: 'UserSessions'});
+        CalendarSessions.hasMany(models.UserSessions, { onDelete: "cascade"})
         CalendarSessions.belongsTo(models.Sessions);
         CalendarSessions.belongsTo(models.CalendarDays);
     };
