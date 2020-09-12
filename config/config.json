@@ -2,6 +2,13 @@
   "development": {
     "use_env_variable": "LOCALDB"
   },
+  "sergeyPC": {
+    "username": "root",
+    "password": "asdf1234",
+    "database": "mma_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
   "test": {
     "username": "root",
     "password": null,

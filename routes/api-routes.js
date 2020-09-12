@@ -1,6 +1,7 @@
 // Requiring our models and passport as we've configured it
 const db = require("../models");
 const passport = require("../config/passport");
+var moment = require('moment');
 
 module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
@@ -20,15 +21,15 @@ module.exports = function (app) {
   app.post("/api/signup", (req, res) => {
     console.log(req.body);
     db.User.create({
-        memberStatus: 0,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        certLevel: parseInt(req.body.certLevel),
-        age: parseInt(req.body.age),
-        email: req.body.email,
-        phoneNumber: req.body.phone,
-        password: req.body.password
-      })
+      memberStatus: 0,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      certLevel: parseInt(req.body.certLevel),
+      age: parseInt(req.body.age),
+      email: req.body.email,
+      phoneNumber: req.body.phone,
+      password: req.body.password
+    })
       .then(() => {
         res.redirect(307, "/api/login");
       })
@@ -70,14 +71,14 @@ module.exports = function (app) {
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
     db.CalendarSessions.findAll({
       include: [{
-          model: db.Sessions
-        },
-        {
-          model: db.CalendarDays,
-          where: {
-            weekNumber: req.params.weekNumber
-          }
+        model: db.Sessions
+      },
+      {
+        model: db.CalendarDays,
+        where: {
+          weekNumber: req.params.weekNumber
         }
+      }
       ]
     }).then(function (results) {
       res.json(results);
@@ -179,6 +180,70 @@ module.exports = function (app) {
       res.send(err);
     });
   });
+
+  app.post("/api/new_session", function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      console.log(req.body)
+      var isTrueSet = (req.body.adultclass === 'true');
+      var sessionBlock=req.body;
+      db.Sessions.create({
+        sessionName: sessionBlock.sessionName,
+        teacherID: parseInt(sessionBlock.teacherId),
+        level: parseInt(sessionBlock.level),
+        inPersonLimit: parseInt(sessionBlock.inPersonLimit),
+        adultclass: isTrueSet,
+      }).then(function (results) {
+
+        db.Sessions.findOne({
+          where: {
+            sessionName: sessionBlock.sessionName,
+            teacherID: parseInt(sessionBlock.teacherId),
+            level: parseInt(sessionBlock.level),
+            inPersonLimit: parseInt(sessionBlock.inPersonLimit),
+            adultclass: isTrueSet,
+          },
+        }).then(function (session) {
+          console.log(session)
+          let sessionID = session.id;
+          console.log(sessionID);
+          let a=sessionBlock.startDate.split('-');
+          let b=sessionBlock.endDate.split('-');
+          console.log(a, b);
+          let startDate=moment().set({'year': parseInt(a[0]),'month': parseInt(a[1])-1,'date': parseInt(a[2]),'hour': parseInt(sessionBlock.startTime),'minute': 0});
+          let endDate=moment().set({'year': parseInt(b[0]),'month': parseInt(b[1])-1,'date': parseInt(b[2]),'hour': parseInt(sessionBlock.startTime), 'minute': 0});
+          let dayOfWeek=parseInt(sessionBlock.dayOfWeek);
+          let i=0;
+
+          console.log(startDate, moment(startDate).weekday(), moment(startDate).format("dddd, MMMM Do YYYY"))
+          do{
+            if (moment(startDate).weekday()===parseInt(sessionBlock.dayOfWeek)){
+              console.log('Class date',moment(startDate).format("yyyy-MM-DD"));
+              db.CalendarDays.findOne({
+                where: {
+                  date: moment(startDate).format("yyyy-MM-DD"),
+                },
+              }).then(function (resDate) {
+                console.log('Date ID :',resDate.id);
+                db.CalendarSessions.create({
+                  startTime: sessionBlock.startTime,
+                  CalendarDayId: resDate.id,
+                  SessionId: sessionID
+                }).then(function (results) {
+                  console.log(results);
+
+                })
+              })
+            }
+            startDate=moment(startDate).add(1,'d');
+          } while (startDate<endDate)
+
+        })
+      });
+    }
+  });
 };
 
 const hasReachedInPersonLimit = async function (id) {
@@ -221,7 +286,7 @@ const updateResults = async function (results) {
 
 const getAllStudents = async function (users) {
   const students = [];
-  
+
   for (const user of users) {
     const student = await db.User.findOne({
       where: {
