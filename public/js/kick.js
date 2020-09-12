@@ -9,6 +9,12 @@ $(document).ready(() => {
   });
   getTopics(1);
   getKicks(1);
+
+  $.get("/api/enroll_class/1").then(data => {
+    console.log(data);
+  }).catch(function(err){
+    console.log(err);
+  });
 });
 var userInfo;
 

@@ -149,16 +149,38 @@ module.exports = function (app) {
     })
   });
 
+  // app.get("/api/enrollto_class/:id", (req, res) => {
+  //   db.UserSessions.findAll({
+  //     where: {
+  //       CalendarSessionId: req.params.id
+  //     }
+  //   }).then(function (users) {
+  //     getAllStudents(users)
+  //     .then( students => {
+  //       res.json(students);
+  //     });   
+  //   });
+  // });
+
   app.get("/api/enrollto_class/:id", (req, res) => {
+    console.log(req.params.id)
+    // db.UserSessions.findAll(
+
+    // )
+    // .then( results => {
+    //   res.json(results);
+    // });
     db.UserSessions.findAll({
       where: {
         CalendarSessionId: req.params.id
+      },
+      include: {
+        model: db.User, attributes: ['firstName', 'lastName', 'certLevel'],
       }
-    }).then(function (users) {
-      getAllStudents(users)
-      .then( students => {
-        res.json(students);
-      });   
+    }).then(results => {
+      res.json(results);
+    }).catch(err => {
+      res.send(err);
     });
   });
 };
