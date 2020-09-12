@@ -1,28 +1,23 @@
 $(document).ready(function () {
 
-    $("#currentMonth").text(moment().format("MMMM YYYY"));
-    for (let i = 0; i < 7; i++) {
-        let dayOfWeek = moment().startOf("week").add(i, "days").format("dddd M/D");
-        $(`#day${i}`).text(dayOfWeek);
-    };
-
+    const weekNumber = moment().week();
+    $("#currentMonth").text(moment().week(weekNumber).format("MMMM YYYY"));
     // const dayOfWeek = moment().startOf("week").add(1, "days").format("YYYY-MM-DD");
     // console.log(dayOfWeek);
-    const weekNumber = moment().week();
     // console.log(moment("12/26/2020", "MM/DD/YYYY").week());
 
-    generateTable();
+    generateTable(weekNumber);
 
     $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
-            console.log(data);
+            // console.log(data);
             displayClassSchedule(data);
         });
 
 
 });
 
-const generateTable = function () {
+const generateTable = function(week) {
     const tableBody = $("tbody.schedule");
 
     // set a unique data-value for each table cell
@@ -32,6 +27,8 @@ const generateTable = function () {
     let classTime = 10;
     // last class at 7pm
     const numberOfRows = 10;
+
+    $('#weekNum').text(week);
 
     for (let i = 0; i < numberOfRows; i++) {
         const tableRow = $("<tr>");
@@ -46,12 +43,14 @@ const generateTable = function () {
         tableRow.append(tableHead);
 
         for (let j = 0; j < 7; j++) {
+            let dayOfWeek = moment().week(week).startOf("week").add(j, "days").format("dddd M/D");
+            $(`#day${j}`).text(dayOfWeek);
             const tableData = $("<td>")
             // assign unique data value to each td cell
             tableData.attr("data-cellvalue", dataCellValue);
 
             // assign date value to each td cell
-            const dataDateValue = moment().startOf("week").add(j, "days").format("YYYY-MM-DD");
+            const dataDateValue = moment().week(week).startOf("week").add(j, "days").format("YYYY-MM-DD");
             tableData.attr("data-datevalue", dataDateValue);
             tableData.attr("data-timevalue", classTime);
 

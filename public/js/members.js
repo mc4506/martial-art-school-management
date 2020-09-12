@@ -320,4 +320,18 @@ $('.show-schedule').on('click', function() {
   $('.show-members').removeClass('active');
 })
 
+$('.prev-week').on('click', function() {
+  let weekNumber = $('#weekNum').val();
+  console.log(weekNumber)
+  // weekNumber--;
+  generateTable(weekNumber);
+
+    $.get(`/api/class_schedule/${weekNumber}`)
+        .then(function (data) {
+            // console.log(data);
+            displayClassSchedule(data);
+        });
+});
+
+
 // TODO Post attendance click event and api route to update UserSession attendance

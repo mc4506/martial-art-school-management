@@ -35,13 +35,13 @@
             <a class="nav-link text-light" href="index.html">Home</a>
           </li>
           <li class="nav-item mr-3">
-            <a class="nav-link text-light" href="#">About FS MMA</a>
+            <a class="nav-link text-light" href="aboutUs.html">About FS MMA</a>
           </li>
           <li class="nav-item mr-3">
             <a class="nav-link text-light" href="class_schedule.html">Classes</a>
           </li>
           <li class="nav-item mr-3">
-            <a class="nav-link text-light" href="#">Contact Us</a>
+            <a class="nav-link text-light" href="contact.html">Contact Us</a>
           </li>
           <li class="nav-item mr-3">
             <a class="nav-link text-light" href="/logout">Logout</a>
@@ -101,11 +101,17 @@
         <a class="nav-link show-members" href="#">All Members</a>
       </li>
     </ul>
+
     <div class="table-responsive">
       <table class="table class-schedule table-striped">
         <thead>
+          <div class="btn-group class-schedule" role="group" aria-label="Change Week">
+            <button type="button" class="btn btn-light prev-week">Previous Week</button>
+            <button type="button" class="btn btn-light next-week">Next Week</button>
+            <button type="button" class="btn btn-light this-week">This Week</button>
+          </div>
           <tr>
-            <th scope="col"></th>
+            <th scope="col" id=weekNum></th>
             <th scope="col" id="day0"></th>
             <th scope="col" id="day1"></th>
             <th scope="col" id="day2"></th>
