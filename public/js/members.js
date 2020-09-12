@@ -282,11 +282,10 @@ $('#enrollBtn').on('click', event => {
     $.post("/api/enroll", {data: newSessions})
     .then( (data) => {
       console.log(data);
-      if(data.message = "exceeded limit") {
-        $('#exceededLimitModal').modal('toggle');
-      } else {
-        window.location.reload();
-      }
+        location.reload();
+    })
+    .catch(err => {
+      console.log(err);
     });
   }
 })

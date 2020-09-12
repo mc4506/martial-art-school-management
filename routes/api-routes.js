@@ -96,7 +96,7 @@ module.exports = function (app) {
           }
         }
       });
-      console.log(results);
+      // console.log(results);
       // check if classes are full. If full add a flag to an updatedResults array
       const data = await updateResults(results);
       // console.log(data);
@@ -114,27 +114,23 @@ module.exports = function (app) {
   });
 
   app.post("/api/enroll", (req, res) => {
-
-    // console.log(req.body);
-    req.body.data.forEach(async e => {
-
-      const reachedlimit = await hasReachedInPersonLimit(e.CalendarSessionId);
-
-      if (reachedlimit) {
-        res.json({
-          "message": "exceeded limit"
-        });
-      } else {
-        db.UserSessions.create({
-          CalendarSessionId: e.CalendarSessionId,
-          UserId: e.UserId
-        }).then(() => {
-          res.json();
-        }).catch((err) => {
-          res.send(err);
-        })
-      }
+   
+    console.log(req.body);
+    const promises = req.body.data.map( e => {
+      db.UserSessions.create({
+        CalendarSessionId: e.CalendarSessionId,
+        UserId: e.UserId
+      }).catch( err => {
+        console.log(err);
+      })
     });
+
+    Promise.all(promises)
+    .then((results) => {
+      res.json(results);
+    }).catch( err => {
+      res.send(err);
+    })
   });
 
   app.get("/api/classes/:memberId", (req, res) => {
