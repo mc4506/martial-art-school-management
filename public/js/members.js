@@ -90,7 +90,7 @@ $(document).ready(() => {
           const id = $(this).parent().attr("id").slice(10);
           console.log(id);
           $.get(`/api/enrollto_class/${id}`).then( results => {
-            // console.log(results);
+            console.log(results);
             $('#studentsModal').modal('toggle');
             $('ul.student-list').attr("data-calSession", id);
             displayStudents(results);
@@ -104,8 +104,6 @@ $(document).ready(() => {
           const dataDateValue = $(this).attr("data-datevalue");
           const dataTimeValue = $(this).attr("data-timevalue");
           addSession(teacherId, dataDateValue, dataTimeValue);
-
-          
         });
       });
     };
@@ -247,14 +245,16 @@ const addSession = function(teacherId, dataDateValue, dataTimeValue){
     }
 
     console.log(newSession);
+    postNewSession(newSession);
 
-    const newCalendarSession = {
+    const sessionCalendarInfo = {
       startTime: dataTimeValue,
       dayOfWeek: dayOfWeek,
       startDate: startDate,
       endDate: endDate
     }
-    console.log(newCalendarSession);
+    console.log(sessionCalendarInfo);
+    postNewCalendarSession(sessionCalendarInfo);
 
   })
 }
@@ -287,6 +287,20 @@ $('#enrollBtn').on('click', event => {
     });
   }
 })
+
+const postNewSession = function(session) {
+  $.post("/api/new_session", session)
+    .then( function(data) {
+
+    })
+}
+
+const postNewCalendarSession = function(calendarInfo) {
+  $.post("/api/new_session/calendarinfo",calendarInfo)
+    .then( function(data) {
+
+    })
+}
 
 // display all-members tab
 $('.show-members').on('click', function() {
