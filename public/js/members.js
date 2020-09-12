@@ -69,24 +69,42 @@ $(document).ready(() => {
         // TODO: DISPLAY member classes
         // TODO: DISPLAY member attendance
       }).then( () => {
-        $('td > .class-info').css("cursor", "pointer");
+        $('td').css("cursor", "pointer");
         $('td > .class-info').hover( function() {
           $(this).parent().addClass("class-info-hover");
         }, function() {
           $(this).parent().removeClass("class-info-hover");
         });
 
+        
+        $('td:not([id])').hover( function() {
+          $(this).text("+")
+          $(this).addClass("add-session-hover"); 
+        }, function() {
+          $(this).text("")
+          $(this).removeClass("add-session-hover"); 
+        });
+       
         // Click on table cell to display who is enrolled in that class and check off student's attendance for that class
         $('td > .class-info').on('click', function(event) {
           const id = $(this).parent().attr("id").slice(10);
           console.log(id);
           $.get(`/api/enrollto_class/${id}`).then( results => {
-            // console.log(results);
+            console.log(results);
             $('#studentsModal').modal('toggle');
             $('ul.student-list').attr("data-calSession", id);
             displayStudents(results);
-          })
-        })
+          });
+        });
+
+        // selector to select td elements that do not have an "id"
+        $('td:not([id])').on('click', function(event) {
+          // pass teacherId, date, and time of clicked cell to addSession function
+          const teacherId = memberId;
+          const dataDateValue = $(this).attr("data-datevalue");
+          const dataTimeValue = $(this).attr("data-timevalue");
+          addSession(teacherId, dataDateValue, dataTimeValue);
+        });
       });
     };
   });
@@ -134,15 +152,23 @@ const displayMembers = function(data) {
   data.forEach( e => {
     const tableRow = $('<tr>');
     const idTd = $(`<td>${e.id}</td>`);
+    idTd.attr("id", `student${e.id}`);
     const memberRole = role[e.memberStatus];
     const roleTd = $(`<td>${memberRole}</td>`);
+    roleTd.attr("id", `student${e.id}-role`);
     const firstNameTd = $(`<td>${e.firstName}</td>`);
+    firstNameTd.attr("id", `student${e.id}-firstName`);
     const lastNameTd = $(`<td>${e.lastName}</td>`);
+    lastNameTd.attr("id", `student${e.id}-lastName`);
     const ageTd = $(`<td>${e.age}</td>`);
+    ageTd.attr("id", `student${e.id}-age`);
     const emailTd = $(`<td>${e.email}</td>`);
+    emailTd.attr("id", `student${e.id}-email`);
     const phoneTd = $(`<td>${e.phoneNumber}</td>`);
+    phoneTd.attr("id", `student${e.id}-phone`);
     const memberRank = belt[e.certLevel];
     const beltTd = $(`<td>${memberRank}</td>`);
+    beltTd.attr("id", `student${e.id}-belt`);
 
     $('tbody.members').append(tableRow);
     tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd);
@@ -176,6 +202,65 @@ const displayEnrolledClasses = function(data) {
   })
 }
 
+const addSession = function(teacherId, dataDateValue, dataTimeValue){
+  $('#addSessionModal').modal('toggle');
+
+  // if repeat class checkbox is checked show start/end date calendar to select dates
+  $('#repeat-class').on('click', function() {
+    if ($('#repeat-class').is(':checked')){
+      $('#repeat-dates').css("display", "flex");
+      $('#start-date').attr("required", true);
+      $('#end-date').attr("required", true);
+      $('#start-date').val(dataDateValue);
+    } else if ($('#repeat-class').is(':not(:checked)')){
+      $('#repeat-dates').css("display", "none");
+      $('#start-date').attr("required", false);
+      $('#endt-date').attr("required", false);
+      $('#start-date').val("");
+    };
+  });
+
+  // add a session and calendar sessions
+  $('form.add-session').on('submit', function(event) {
+    event.preventDefault();
+
+    // retrieve session info
+    const sessionName = $('#class-name-input').val();
+    const adultclass = ($('#adult-class').val() === "Adult") ? true : false;
+    const level = parseInt($('#experience-level').val().slice(0,1));
+    const inPersonLimit = parseInt($('#in-person-limit').val());
+    
+    // retrieve calendar and calendarSession info
+    const repeatClass = $('#repeat-class').is(':checked');
+    
+    let startDate = null;
+    let endDate = null;
+    if(repeatClass) {
+      startDate = $('#start-date').val();
+      endDate = $('#end-date').val();
+    } else {
+      startDate = dataDateValue;
+      endDate = dataDateValue;
+    }
+    const dayOfWeek = moment(dataDateValue).day();
+    
+    const newSession = {
+      sessionName: sessionName,
+      adultclass: adultclass,
+      level: level,
+      inPersonLimit: inPersonLimit,
+      teacherId: teacherId,
+      startTime: dataTimeValue,
+      dayOfWeek: dayOfWeek,
+      startDate: startDate,
+      endDate: endDate
+    }
+
+    console.log(newSession);
+    postNewSession(newSession);
+
+  })
+}
 
 // click events
 $('#enrollBtn').on('click', event => {
@@ -200,11 +285,18 @@ $('#enrollBtn').on('click', event => {
       if(data.message = "exceeded limit") {
         $('#exceededLimitModal').modal('toggle');
       } else {
-        location.reload();
+        window.location.reload();
       }
     });
   }
 })
+
+const postNewSession = function(session) {
+  $.post("/api/new_session", session)
+    .then( function(data) {
+
+    })
+}
 
 // display all-members tab
 $('.show-members').on('click', function() {

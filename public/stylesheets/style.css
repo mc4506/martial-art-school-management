@@ -37,6 +37,12 @@
   background: #aaaaaa;
 }
 
+.add-session-hover {
+  font-size: 50px;
+  color: #dddddd;
+  text-align: center;
+}
+
 #myVideo {
   position: fixed;
   top: 36px;
