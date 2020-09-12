@@ -30,7 +30,7 @@ const generateTable = function () {
 
     // first class at 10am
     let classTime = 10;
-    // last class at 6pm
+    // last class at 7pm
     const numberOfRows = 10;
 
     for (let i = 0; i < numberOfRows; i++) {
@@ -49,6 +49,11 @@ const generateTable = function () {
             const tableData = $("<td>")
             // assign unique data value to each td cell
             tableData.attr("data-cellvalue", dataCellValue);
+
+            // assign date value to each td cell
+            const dataDateValue = moment().startOf("week").add(j, "days").format("YYYY-MM-DD");
+            tableData.attr("data-datevalue", dataDateValue);
+            tableData.attr("data-timevalue", classTime);
 
             // tableData.text(`day: ${j}, classTime: ${classTime}, value: ${dataValue}`);
             tableRow.append(tableData);
