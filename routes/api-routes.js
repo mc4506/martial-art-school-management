@@ -69,6 +69,7 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
+    let dateA=moment()
     db.CalendarSessions.findAll({
       include: [{
         model: db.Sessions
@@ -214,28 +215,28 @@ module.exports = function (app) {
           console.log(a, b);
           let startDate=moment().set({'year': parseInt(a[0]),'month': parseInt(a[1])-1,'date': parseInt(a[2]),'hour': parseInt(sessionBlock.startTime),'minute': 0});
           let endDate=moment().set({'year': parseInt(b[0]),'month': parseInt(b[1])-1,'date': parseInt(b[2]),'hour': parseInt(sessionBlock.startTime), 'minute': 0});
-          let dayOfWeek=parseInt(sessionBlock.dayOfWeek);
+          let daysOfWeek=sessionBlock.dayOfWeek;
           let i=0;
-
+          console.log(daysOfWeek);
           console.log(startDate, moment(startDate).weekday(), moment(startDate).format("dddd, MMMM Do YYYY"))
           do{
-            if (moment(startDate).weekday()===parseInt(sessionBlock.dayOfWeek)){
-              console.log('Class date',moment(startDate).format("yyyy-MM-DD"));
-              db.CalendarDays.findOne({
-                where: {
-                  date: moment(startDate).format("yyyy-MM-DD"),
-                },
-              }).then(function (resDate) {
-                console.log('Date ID :',resDate.id);
+            if (daysOfWeek.indexOf((moment(startDate).day()+' ').trim())>=0){
+              console.log('Class date',moment(startDate).format("YYYY-MM-DD HH:mm:ss"));
+              // db.CalendarDays.findOne({
+              //   where: {
+              //     date: moment(startDate).format("yyyy-MM-DD"),
+              //   },
+              // }).then(function (resDate) {
+                // console.log('Date ID :',resDate.id);
                 db.CalendarSessions.create({
                   startTime: sessionBlock.startTime,
-                  CalendarDayId: resDate.id,
-                  SessionId: sessionID
+                  calendarDate: startDate,
+                  SessionId: sessionID,
                 }).then(function (results) {
-                  console.log(results);
+                  // console.log(results);
 
                 })
-              })
+              // })
             }
             startDate=moment(startDate).add(1,'d');
           } while (startDate<endDate)
