@@ -69,20 +69,14 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    let dateA=moment().week(req.params.weekNumber).startOf('week');
-    let dateB=moment().week(req.params.weekNumber).endOf('week');
+    let dateA = moment().week(req.params.weekNumber).startOf('week');
+    let dateB = moment().week(req.params.weekNumber).endOf('week');
     console.log(dateA, dateB);
     db.CalendarSessions.findAll({
-      where:{
-        calendarDate: {[Op.gt]: dateA, [Op.lt]: dateB} },
-      include: { model: db.Sessions}
-      // {
-      //   model: db.CalendarDays,
-      //   where: {
-      //     weekNumber: req.params.weekNumber
-      //   }
-      // }
-      // ]
+      where: {
+        calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
+      },
+      include: { model: db.Sessions }
     }).then(function (results) {
       res.json(results);
     });
@@ -118,23 +112,23 @@ module.exports = function (app) {
   });
 
   app.post("/api/enroll", (req, res) => {
-   
+
     console.log(req.body);
-    const promises = req.body.data.map( e => {
+    const promises = req.body.data.map(e => {
       db.UserSessions.create({
         CalendarSessionId: e.CalendarSessionId,
         UserId: e.UserId
-      }).catch( err => {
+      }).catch(err => {
         console.log(err);
       })
     });
 
     Promise.all(promises)
-    .then((results) => {
-      res.json(results);
-    }).catch( err => {
-      res.send(err);
-    })
+      .then((results) => {
+        res.json(results);
+      }).catch(err => {
+        res.send(err);
+      })
   });
 
   app.get("/api/classes/:memberId", (req, res) => {
@@ -191,7 +185,7 @@ module.exports = function (app) {
     } else {
       console.log(req.body)
       var isTrueSet = (req.body.adultclass === 'true');
-      var sessionBlock=req.body;
+      var sessionBlock = req.body;
       db.Sessions.create({
         sessionName: sessionBlock.sessionName,
         teacherID: parseInt(sessionBlock.teacherId),
@@ -212,41 +206,75 @@ module.exports = function (app) {
           console.log(session)
           let sessionID = session.id;
           console.log(sessionID);
-          let a=sessionBlock.startDate.split('-');
-          let b=sessionBlock.endDate.split('-');
+          let a = sessionBlock.startDate.split('-');
+          let b = sessionBlock.endDate.split('-');
           console.log(a, b);
-          let startDate=moment().set({'year': parseInt(a[0]),'month': parseInt(a[1])-1,'date': parseInt(a[2]),'hour': parseInt(sessionBlock.startTime),'minute': 0});
-          let endDate=moment().set({'year': parseInt(b[0]),'month': parseInt(b[1])-1,'date': parseInt(b[2]),'hour': parseInt(sessionBlock.startTime), 'minute': 0});
-          let daysOfWeek=sessionBlock.dayOfWeek;
-          let i=0;
+          let startDate = moment().set({ 'year': parseInt(a[0]), 'month': parseInt(a[1]) - 1, 'date': parseInt(a[2]), 'hour': parseInt(sessionBlock.startTime), 'minute': 0 });
+          let endDate = moment().set({ 'year': parseInt(b[0]), 'month': parseInt(b[1]) - 1, 'date': parseInt(b[2]), 'hour': parseInt(sessionBlock.startTime), 'minute': 0 });
+          let daysOfWeek = sessionBlock.dayOfWeek;
+          let i = 0;
           console.log(daysOfWeek);
           console.log(startDate, moment(startDate).weekday(), moment(startDate).format("dddd, MMMM Do YYYY"))
-          do{
-            if (daysOfWeek.indexOf((moment(startDate).day()+' ').trim())>=0){
-              console.log('Class date',moment(startDate).format("YYYY-MM-DD HH:mm:ss"));
+          do {
+            if (daysOfWeek.indexOf((moment(startDate).day() + ' ').trim()) >= 0) {
+              console.log('Class date', moment(startDate).format("YYYY-MM-DD HH:mm:ss"));
               // db.CalendarDays.findOne({
               //   where: {
               //     date: moment(startDate).format("yyyy-MM-DD"),
               //   },
               // }).then(function (resDate) {
-                // console.log('Date ID :',resDate.id);
-                db.CalendarSessions.create({
-                  startTime: sessionBlock.startTime,
-                  calendarDate: startDate,
-                  SessionId: sessionID,
-                }).then(function (results) {
-                  // console.log(results);
+              // console.log('Date ID :',resDate.id);
+              db.CalendarSessions.create({
+                startTime: sessionBlock.startTime,
+                calendarDate: startDate,
+                SessionId: sessionID,
+              }).then(function (results) {
+                // console.log(results);
 
-                })
+              })
               // })
             }
-            startDate=moment(startDate).add(1,'d');
-          } while (startDate<endDate)
+            startDate = moment(startDate).add(1, 'd');
+          } while (startDate < endDate)
 
         })
       });
     }
   });
+  
+  app.put('/api/members/:id', function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      db.User.update({
+        certLevel: req.body.certLevel,
+        role: req.body.role,
+        where: {
+          id: req.params.id
+        }
+      }).then(function (results) {
+        console.log(results);
+
+      })
+    }
+  })
+  app.delete('/api/members/:id', function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      db.User.delete({
+        where: {
+          id: req.params.id
+        }
+      }).then(function (results) {
+        // console.log(results);
+
+      })
+    }
+  })
+
 };
 
 const hasReachedInPersonLimit = async function (id) {
