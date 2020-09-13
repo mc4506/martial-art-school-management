@@ -15,12 +15,12 @@ const role = {
 };
 
 let memberId = null;
+let memberStatus = null; // student, teacher, 
+let rank = null; // belt rank, white, blue, etc...
+let isAdult = 1;
+let level = null; // beginner, intermediate, advanced
 
 $(document).ready(() => {
-
-  let memberStatus = null;
-  let rank = null;
-  let isAdult = 1;
 
   // display Member info
   $.get("/api/user_data").then(data => {
@@ -40,23 +40,8 @@ $(document).ready(() => {
         // unhide enrolled and eligible class Div
         $('.is-member').removeClass('d-none');
 
-        const level = getEligibleClassLevel(rank);
-        // get eligible class based on level and isAdult
-        $.get(`/api/class_schedule/${level}/${isAdult}`)
-          .then(data => {
-            console.log(data);
-            listEligibleClasses(data);
-            listReachedLimitClasses(data);
-          }).then(() => {
-            $.get(`/api/classes/${memberId}`)
-              .then((data) => {
-                if (data.length === 0) {
-                  return;
-                } else {
-                  displayEnrolledClasses(data);
-                }
-              })
-          });
+        level = getEligibleClassLevel(rank);
+        displayMemberClassInfo();
         // If member is a teacher
       } else if (memberStatus === 1) {
         $('.is-teacher').removeClass('d-none');
@@ -231,6 +216,25 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
   });
 }
 
+const displayMemberClassInfo = function() {
+  // get eligible class based on level and isAdult
+  $.get(`/api/class_schedule/${level}/${isAdult}`)
+  .then(data => {
+    // console.log(data);
+    listEligibleClasses(data);
+    listReachedLimitClasses(data);
+  }).then(() => {
+    $.get(`/api/classes/${memberId}`)
+      .then((data) => {
+        if (data.length === 0) {
+          return;
+        } else {
+          displayEnrolledClasses(data);
+        }
+      })
+  });
+}
+
 const applyHoverEvents = function () {
   $('td').css("cursor", "pointer");
   $('td > .class-info').hover(function () {
@@ -335,10 +339,13 @@ $('.prev-week').on('click', function () {
       console.log(data);
       displayClassSchedule(data);
     }).then( () => {
-      applyHoverEvents();
-      applyTdClickEvents();
+      if(memberStatus === 0) {
+        displayMemberClassInfo();
+      } else if (memberStatus === 1) {
+        applyHoverEvents();
+        applyTdClickEvents();
+      }
     });
-  
 });
 
 $('.next-week').on('click', function () {
@@ -353,14 +360,18 @@ $('.next-week').on('click', function () {
       console.log(data);
       displayClassSchedule(data);
     }).then( () => {
-      applyHoverEvents();
-      applyTdClickEvents();
+      if(memberStatus === 0) {
+        displayMemberClassInfo();
+      } else if (memberStatus === 1) {
+        applyHoverEvents();
+        applyTdClickEvents();
+      }
     });
 });
 
 $('.this-week').on('click', function () {
   let weekNumber = moment().week();
-
+  if (parseInt($('#weekNum').attr("data-week-num")) === weekNumber) return;
   // run function from classSchedule.js
   generateTable(weekNumber);
 
@@ -369,8 +380,12 @@ $('.this-week').on('click', function () {
       console.log(data);
       displayClassSchedule(data);
     }).then( () => {
-      applyHoverEvents();
-      applyTdClickEvents();
+      if(memberStatus === 0) {
+        displayMemberClassInfo();
+      } else if (memberStatus === 1) {
+        applyHoverEvents();
+        applyTdClickEvents();
+      }
     });
 });
 
