@@ -177,7 +177,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Student List - Check Attendance</h5>
+          <h5 class="modal-title">Student List - Check If Present</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -247,7 +247,8 @@
                 <input type="date" class="form-control" id="end-date" name="end-date">
               </div>
               <div class="form-group col-12">
-                <select name="dayOfWeek" id="dayOfWeeks" multiple>
+                <label for="dayOfWeeks">Select Days of Week</label>
+                <select class="form-select" name="dayOfWeek" id="dayOfWeeks" multiple>
                   <option value=0>Sunday</option>
                   <option value=1>Monday</option>
                   <option value=2>Tuesday</option>
@@ -272,7 +273,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-light">Update Student</h5>
+          <h5 class="modal-title text-light">Update <span class="student-name"></span>'s Record</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -319,7 +320,7 @@
           </button>
         </div>
         <div class="modal-body">
-          Are you sure you want to delete <span id="studentName"></span> ?
+          Are you sure you want to delete <span class="student-name"></span> ?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" id="confirmBtn" data-dismiss="modal">Confirm</button>

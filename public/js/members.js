@@ -48,7 +48,7 @@ $(document).ready(() => {
 
         $.get("/api/all_members")
           .then(data => {
-            console.log(data);
+            // console.log(data);
             displayMembers(data);
           }).then(() => {
             updateStudentClickEvents();
@@ -72,7 +72,7 @@ const getEligibleClassLevel = function (rank) {
   }
 };
 
-
+// list all eligible classes a student can take based on his/her rank
 const listEligibleClasses = function (results) {
 
   results.forEach(e => {
@@ -85,6 +85,7 @@ const listEligibleClasses = function (results) {
   })
 }
 
+// indicate which classes has reached its in person limit
 const listReachedLimitClasses = function (results) {
   results.forEach(e => {
     if (e.hasOwnProperty("reachedLimit")) {
@@ -121,8 +122,15 @@ const displayMembers = function (data) {
     const updateBtnTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn">Update</button></td>`);
     const deleteBtnTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn">Delete</button></td>`);
 
+    const updateBtnDisabledTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn disabled">Update</button></td>`);
+    const deleteBtnDisabledTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn disabled">Delete</button></td>`);
+
     $('tbody.members').append(tableRow);
-    tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
+    if (memberRole === "student") {
+      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
+    } else if (memberRole === "teacher") {
+      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnDisabledTd, deleteBtnDisabledTd);
+    }
   })
 }
 
@@ -146,6 +154,7 @@ const displayStudents = function (data) {
   })
 }
 
+// display classes the student has enrolled in
 const displayEnrolledClasses = function (data) {
   data.forEach(e => {
     $(`#calSession${e.CalendarSessionId}`).css("background", "#00DA28");
@@ -268,22 +277,54 @@ const applyHoverEvents = function () {
 }
 
 const updateStudentClickEvents = function() {
+  let id = null;
+
   $('.updateBtn').on('click', function(event) {
     event.preventDefault();
     $('#updateStudentModal').modal("toggle");
-    const id = $(this).parent().attr("id").slice(6);
-    console.log(id);
-    
-  })
+    id = $(this).parent().attr("id").slice(6);
+    const firstName = $(`#student${id}-firstName`).text();
+    const lastName = $(`#student${id}-lastName`).text();
+    $('.student-name').text(`${firstName} ${lastName}`);
+  });
   
   $('.deleteBtn').on('click', function(event) {
     event.preventDefault();
     $('#confirmDeleteModal').modal("toggle");
-    const id = $(this).parent().attr("id").slice(6);
+    id = $(this).parent().attr("id").slice(6);
+    const firstName = $(`#student${id}-firstName`).text();
+    const lastName = $(`#student${id}-lastName`).text();
+    $('.student-name').text(`${firstName} ${lastName}`);
+  });
+
+  $('#updateBtn').on('click', function() {
+    const newCertLevel = getKeyByValue(belt, $('#rankSelect').val());
+    const newRole = getKeyByValue(role, $('#roleSelect').val().toLowerCase());
+
+    const studentRecord = {
+      certLevel: newCertLevel,
+      role: newRole,
+    };
+
+    console.log(id, studentRecord);
+
+    $.ajax({
+      method: "PUT",
+      url: `/api/members/${id}`,
+      data: studentRecord,
+    }).then( response => {
+      location.reload();
+    })
+  });
+
+  $('#confirmBtn').on('click', function() {
     console.log(id);
-    const firstName = $(`#student${id}-firstName`).val();
-    const lastName = $(`#student${id}-lastName`).val();
-    $('#studentName').text(`${firstName} ${lastName}`);
+    $.ajax({
+      method: "DELETE",
+      url: `/api/members/${id}`
+    }).then( response => {
+      location.reload();
+    })
   })
 }
 
@@ -291,7 +332,7 @@ const applyTdClickEvents = function() {
   // Click on table cell to display who is enrolled in that class and check off student's attendance for that class
   $('td > .class-info').on('click', function (event) {
     const id = $(this).parent().attr("id").slice(10);
-    console.log(id);
+    // console.log(id);
     $.get(`/api/enrollto_class/${id}`).then(results => {
       console.log(results);
       $('#studentsModal').modal('toggle');
@@ -308,6 +349,15 @@ const applyTdClickEvents = function() {
     const dataTimeValue = $(this).attr("data-timevalue");
     addSession(teacherId, dataDateValue, dataTimeValue);
   });
+}
+
+// helper function to find key given a value
+const getKeyByValue = function(obj, val) {
+  for (const  prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      if (obj[prop] === val) return prop;
+    }
+  }
 }
 
 // click events
@@ -371,7 +421,7 @@ $('.prev-week').on('click', function () {
 
   $.get(`/api/class_schedule/${weekNumber}`)
     .then(function (data) {
-      console.log(data);
+      // console.log(data);
       displayClassSchedule(data);
     }).then( () => {
       if(memberStatus === 0) {
@@ -392,7 +442,7 @@ $('.next-week').on('click', function () {
 
   $.get(`/api/class_schedule/${weekNumber}`)
     .then(function (data) {
-      console.log(data);
+      // console.log(data);
       displayClassSchedule(data);
     }).then( () => {
       if(memberStatus === 0) {
@@ -412,7 +462,7 @@ $('.this-week').on('click', function () {
 
   $.get(`/api/class_schedule/${weekNumber}`)
     .then(function (data) {
-      console.log(data);
+      // console.log(data);
       displayClassSchedule(data);
     }).then( () => {
       if(memberStatus === 0) {
