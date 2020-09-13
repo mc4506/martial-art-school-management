@@ -73,7 +73,7 @@ const displayClassSchedule = function (data) {
         const calSessionId = data[i].id;
 
         // get unique cell value based on day and time of class. Use this to populate the correct cell in the table
-        const tdID = (data[i].startTime - 10) * 7 + data[i].CalendarDay.dayOfWeek;
+        const tdID = (data[i].startTime - 10) * 7 + moment(data[i].calendarDate).day();
         // console.log(tdID);
         // assign a unique sessionId to each non-empty table cell
         const newDiv = $('<div class="class-info">');

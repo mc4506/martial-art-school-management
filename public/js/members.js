@@ -171,6 +171,16 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
     };
   });
 
+  // function getWeeklySchedule(){
+  //   let sum=0;
+  //   let arr=$('#dayOfWeeks').val()
+  //   for (let i=1; i<8; i++){}
+  //     console.log($('#dayOfWeeks').val())
+      
+    
+  //   console.log(sum.toString(2))
+  //   return sum
+  // }
   // add a session and calendar sessions
   $('form.add-session').on('submit', function (event) {
     event.preventDefault();
@@ -186,15 +196,20 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
 
     let startDate = null;
     let endDate = null;
-    if (repeatClass) {
+    let dayOfWeek="";
+    if(repeatClass) {
       startDate = $('#start-date').val();
       endDate = $('#end-date').val();
     } else {
       startDate = dataDateValue;
       endDate = dataDateValue;
     }
-    const dayOfWeek = moment(dataDateValue).day();
-
+    dayOfWeek = (moment(dataDateValue).day()+" ").trim();
+    let weekdaysArr=$('#dayOfWeeks').val();
+    if (weekdaysArr.indexOf(dayOfWeek)<0){
+      weekdaysArr.push(dayOfWeek)
+    }
+    console.log(weekdaysArr)
     const newSession = {
       sessionName: sessionName,
       adultclass: adultclass,
@@ -202,7 +217,7 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
       inPersonLimit: inPersonLimit,
       teacherId: teacherId,
       startTime: dataTimeValue,
-      dayOfWeek: dayOfWeek,
+      dayOfWeek: weekdaysArr,
       startDate: startDate,
       endDate: endDate
     }
