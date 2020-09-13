@@ -236,8 +236,8 @@ module.exports = function (app) {
             }
             startDate = moment(startDate).add(1, 'd');
           } while (startDate < endDate)
-
         })
+        res.json({});
       });
     }
   });
