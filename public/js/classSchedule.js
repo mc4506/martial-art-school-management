@@ -28,7 +28,10 @@ const generateTable = function(week) {
     // last class at 7pm
     const numberOfRows = 10;
 
-    $('#weekNum').text(week);
+    $('#weekNum').attr("data-week-num", week);
+
+    // clear table if previously exists
+    $('tbody.schedule').html("");
 
     for (let i = 0; i < numberOfRows; i++) {
         const tableRow = $("<tr>");
@@ -51,6 +54,7 @@ const generateTable = function(week) {
 
             // assign date value to each td cell
             const dataDateValue = moment().week(week).startOf("week").add(j, "days").format("YYYY-MM-DD");
+            // console.log(dataDateValue);
             tableData.attr("data-datevalue", dataDateValue);
             tableData.attr("data-timevalue", classTime);
 
@@ -63,7 +67,6 @@ const generateTable = function(week) {
 }
 
 const displayClassSchedule = function (data) {
-    
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
         const limit = data[i].Session.inPersonLimit;

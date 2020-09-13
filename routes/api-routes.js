@@ -233,14 +233,13 @@ module.exports = function (app) {
                   SessionId: sessionID
                 }).then(function (results) {
                   console.log(results);
-
                 })
               })
             }
             startDate=moment(startDate).add(1,'d');
-          } while (startDate<endDate)
-
+          } while (startDate<endDate);
         })
+        res.json({});
       });
     }
   });
