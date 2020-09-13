@@ -2,7 +2,7 @@
 const db = require("../models");
 const passport = require("../config/passport");
 var moment = require('moment');
-
+const { Op } = require("sequelize");
 module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
@@ -69,17 +69,20 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
+    let dateA=moment().week(req.params.weekNumber).startOf('week');
+    let dateB=moment().week(req.params.weekNumber).endOf('week');
+    console.log(dateA, dateB);
     db.CalendarSessions.findAll({
-      include: [{
-        model: db.Sessions
-      },
-      {
-        model: db.CalendarDays,
-        where: {
-          weekNumber: req.params.weekNumber
-        }
-      }
-      ]
+      where:{
+        calendarDate: {[Op.gt]: dateA, [Op.lt]: dateB} },
+      include: { model: db.Sessions}
+      // {
+      //   model: db.CalendarDays,
+      //   where: {
+      //     weekNumber: req.params.weekNumber
+      //   }
+      // }
+      // ]
     }).then(function (results) {
       res.json(results);
     });
@@ -214,28 +217,28 @@ module.exports = function (app) {
           console.log(a, b);
           let startDate=moment().set({'year': parseInt(a[0]),'month': parseInt(a[1])-1,'date': parseInt(a[2]),'hour': parseInt(sessionBlock.startTime),'minute': 0});
           let endDate=moment().set({'year': parseInt(b[0]),'month': parseInt(b[1])-1,'date': parseInt(b[2]),'hour': parseInt(sessionBlock.startTime), 'minute': 0});
-          let dayOfWeek=parseInt(sessionBlock.dayOfWeek);
+          let daysOfWeek=sessionBlock.dayOfWeek;
           let i=0;
-
+          console.log(daysOfWeek);
           console.log(startDate, moment(startDate).weekday(), moment(startDate).format("dddd, MMMM Do YYYY"))
           do{
-            if (moment(startDate).weekday()===parseInt(sessionBlock.dayOfWeek)){
-              console.log('Class date',moment(startDate).format("yyyy-MM-DD"));
-              db.CalendarDays.findOne({
-                where: {
-                  date: moment(startDate).format("yyyy-MM-DD"),
-                },
-              }).then(function (resDate) {
-                console.log('Date ID :',resDate.id);
+            if (daysOfWeek.indexOf((moment(startDate).day()+' ').trim())>=0){
+              console.log('Class date',moment(startDate).format("YYYY-MM-DD HH:mm:ss"));
+              // db.CalendarDays.findOne({
+              //   where: {
+              //     date: moment(startDate).format("yyyy-MM-DD"),
+              //   },
+              // }).then(function (resDate) {
+                // console.log('Date ID :',resDate.id);
                 db.CalendarSessions.create({
                   startTime: sessionBlock.startTime,
-                  CalendarDayId: resDate.id,
-                  SessionId: sessionID
+                  calendarDate: startDate,
+                  SessionId: sessionID,
                 }).then(function (results) {
-                  console.log(results);
+                  // console.log(results);
 
                 })
-              })
+              // })
             }
             startDate=moment(startDate).add(1,'d');
           } while (startDate<endDate)

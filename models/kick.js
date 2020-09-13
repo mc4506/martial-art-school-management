@@ -5,20 +5,7 @@ module.exports = function (sequelize, DataTypes) {
   var Kick = sequelize.define("Kick", {
     // The email cannot be null, and must be a proper email before creation
     message: {type: DataTypes.TEXT, allowNull: false, len: [280], validate: {len: [1]} },
-    // kicktopicID: {
-    //   type: DataTypes.INTEGER,
-    //   references: {
-    //      model: 'kicktopics', // 'kicktopics' refers to table name
-    //      key: 'id', // 'id' refers to column name in persons table
-    //   }
-    // },
-    // userID: {
-    //   type: DataTypes.INTEGER,
-    //   references: {
-    //      model: 'users', // 'users' refers to table name
-    //      key: 'id', // 'id' refers to column name in persons table
-    //   }
-    // }, 
+ 
   });
 
   Kick.associate = function(models) {
