@@ -184,11 +184,11 @@ const displayStudents = function(data) {
     const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
     const labelEl = $('<label class="form-check-label">');
     // assign userId to checkbox value
-    inputEl.attr("value", `${e.id}`);
-    inputEl.attr("id", `student${e.id}`);
-    const memberRank = belt[e.certLevel];
-    labelEl.text(`${e.firstName} ${e.lastName} - ${memberRank} belt`);
-    labelEl.attr("for", `student${e.id}`);
+    inputEl.attr("value", `${e.UserId}`);
+    inputEl.attr("id", `student${e.UserId}`);
+    const memberRank = belt[e.User.certLevel];
+    labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+    labelEl.attr("for", `student${e.UserId}`);
     listItemEl.append(formCheckEl);
     formCheckEl.append(inputEl, labelEl);
     $('ul.student-list').append(listItemEl);
@@ -282,11 +282,10 @@ $('#enrollBtn').on('click', event => {
     $.post("/api/enroll", {data: newSessions})
     .then( (data) => {
       console.log(data);
-      if(data.message = "exceeded limit") {
-        $('#exceededLimitModal').modal('toggle');
-      } else {
-        window.location.reload();
-      }
+        location.reload();
+    })
+    .catch(err => {
+      console.log(err);
     });
   }
 })
