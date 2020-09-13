@@ -2,7 +2,7 @@
 const db = require("../models");
 const passport = require("../config/passport");
 var moment = require('moment');
-
+const { Op } = require("sequelize");
 module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
@@ -69,18 +69,20 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    let dateA=moment()
+    let dateA=moment().week(req.params.weekNumber).startOf('week');
+    let dateB=moment().week(req.params.weekNumber).endOf('week');
+    console.log(dateA, dateB);
     db.CalendarSessions.findAll({
-      include: [{
-        model: db.Sessions
-      },
-      {
-        model: db.CalendarDays,
-        where: {
-          weekNumber: req.params.weekNumber
-        }
-      }
-      ]
+      where:{
+        calendarDate: {[Op.gt]: dateA, [Op.lt]: dateB} },
+      include: { model: db.Sessions}
+      // {
+      //   model: db.CalendarDays,
+      //   where: {
+      //     weekNumber: req.params.weekNumber
+      //   }
+      // }
+      // ]
     }).then(function (results) {
       res.json(results);
     });
