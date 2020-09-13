@@ -302,7 +302,7 @@ const updateStudentClickEvents = function() {
     $('.student-name').text(`${firstName} ${lastName}`);
   });
 
-  $('#updateBtn').on('click', function() {
+  $('#updateStudentBtn').on('click', function() {
     const newCertLevel = getKeyByValue(belt, $('#rankSelect').val());
     const newRole = getKeyByValue(role, $('#roleSelect').val().toLowerCase());
 
@@ -311,7 +311,7 @@ const updateStudentClickEvents = function() {
       role: newRole,
     };
 
-    console.log(id, studentRecord);
+    // console.log(id, studentRecord);
 
     $.ajax({
       method: "PUT",
@@ -322,8 +322,8 @@ const updateStudentClickEvents = function() {
     })
   });
 
-  $('#confirmBtn').on('click', function() {
-    console.log(id);
+  $('#confirmDeleteBtn').on('click', function() {
+    // console.log(id);
     $.ajax({
       method: "DELETE",
       url: `/api/members/${id}`
