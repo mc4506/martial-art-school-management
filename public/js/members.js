@@ -51,9 +51,7 @@ $(document).ready(() => {
             console.log(data);
             displayMembers(data);
           }).then(() => {
-            // TODO: DISPLAY member classes
-            // TODO: DISPLAY member attendance
-          }).then(() => {
+            updateStudentClickEvents();
             applyHoverEvents();
             applyTdClickEvents();
           });
@@ -120,9 +118,11 @@ const displayMembers = function (data) {
     const memberRank = belt[e.certLevel];
     const beltTd = $(`<td>${memberRank}</td>`);
     beltTd.attr("id", `student${e.id}-belt`);
+    const updateBtnTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn">Update</button></td>`);
+    const deleteBtnTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn">Delete</button></td>`);
 
     $('tbody.members').append(tableRow);
-    tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd);
+    tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
   })
 }
 
@@ -250,6 +250,26 @@ const applyHoverEvents = function () {
     $(this).text("")
     $(this).removeClass("add-session-hover");
   });
+}
+
+const updateStudentClickEvents = function() {
+  $('.updateBtn').on('click', function(event) {
+    event.preventDefault();
+    $('#updateStudentModal').modal("toggle");
+    const id = $(this).parent().attr("id").slice(6);
+    console.log(id);
+    
+  })
+  
+  $('.deleteBtn').on('click', function(event) {
+    event.preventDefault();
+    $('#confirmDeleteModal').modal("toggle");
+    const id = $(this).parent().attr("id").slice(6);
+    console.log(id);
+    const firstName = $(`#student${id}-firstName`).val();
+    const lastName = $(`#student${id}-lastName`).val();
+    $('#studentName').text(`${firstName} ${lastName}`);
+  })
 }
 
 const applyTdClickEvents = function() {
