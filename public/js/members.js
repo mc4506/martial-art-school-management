@@ -128,7 +128,7 @@ const displayMembers = function (data) {
     $('tbody.members').append(tableRow);
     if (memberRole === "student") {
       tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
-    } else if (memberRole === "teacher") {
+    } else if (memberRole === "teacher") { // only allow teachers to change student records
       tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnDisabledTd, deleteBtnDisabledTd);
     }
   })
@@ -165,15 +165,19 @@ const displayEnrolledClasses = function (data) {
 const addSession = function (teacherId, dataDateValue, dataTimeValue) {
   $('#addSessionModal').modal('toggle');
 
+  // clear all form fields
+  $('form input').val("");
+  $('form select').val("");
+
   // if repeat class checkbox is checked show start/end date calendar to select dates
-  $('#repeat-class').on('click', function () {
-    if ($('#repeat-class').is(':checked')) {
-      $('#repeat-dates').toggle();
+  $('#repeat-class').change(function (event) {
+    event.stopImmediatePropagation(); // prevent propagation of events outside of modal
+    $('#repeat-dates').toggle();
+    if (this.checked) {
       $('#start-date').attr("required", true);
       $('#end-date').attr("required", true);
       $('#start-date').val(dataDateValue);
-    } else if ($('#repeat-class').is(':not(:checked)')) {
-      $('#repeat-dates').toggle();
+    } else {
       $('#start-date').attr("required", false);
       $('#end-date').attr("required", false);
       $('#start-date').val("");
@@ -215,6 +219,7 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
     }
     dayOfWeek = (moment(dataDateValue).day()+" ").trim();
     let weekdaysArr=$('#dayOfWeeks').val();
+    console.log(weekdaysArr);
     if (weekdaysArr.indexOf(dayOfWeek)<0){
       weekdaysArr.push(dayOfWeek)
     }

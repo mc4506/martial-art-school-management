@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
-            // console.log(data);
+            console.log(data);
             displayClassSchedule(data);
         });
 
@@ -69,15 +69,28 @@ const generateTable = function(week) {
 const displayClassSchedule = function (data) {
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
+        const levelNum = data[i].Session.level;
         const limit = data[i].Session.inPersonLimit;
         const calSessionId = data[i].id;
+
+        let adultclass = "";
+        data[i].Session.adultclass ? adultclass = "Adults" : adultclass = "Juniors";
+        
+        let level = "";
+        if (levelNum === 1) {
+            level = "Beginner";
+        } else if (levelNum === 2) {
+            level = "Intermediate";
+        } else {
+            level = "Advanced";
+        };
 
         // get unique cell value based on day and time of class. Use this to populate the correct cell in the table
         const tdID = (data[i].startTime - 10) * 7 + moment(data[i].calendarDate).day();
         // console.log(tdID);
         // assign a unique sessionId to each non-empty table cell
         const newDiv = $('<div class="class-info">');
-        newDiv.text(`${sessionName} / In-Person limit of ${limit} people`);
+        newDiv.text(`${sessionName} - ${level} - ${adultclass} / In-Person limit of ${limit} people`);
 
         $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);
         $(`td[data-cellvalue=${tdID}]`).append(newDiv);

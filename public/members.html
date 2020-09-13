@@ -237,18 +237,20 @@
                 </label>
               </div>
             </div>
-            <div class="row" id="repeat-dates" style="display: none;">
-              <div class="form-group col-6">
-                <label for="start-date">Enter Start Date</label>
-                <input type="date" class="form-control" id="start-date" name="start-date">
+            <div id="repeat-dates" style="display: none">
+              <div class="row">
+                <div class="form-group col-6">
+                  <label for="start-date">Enter Start Date</label>
+                  <input type="date" class="form-control" id="start-date" name="start-date">
+                </div>
+                <div class="form-group col-6">
+                  <label for="end-date">Enter End Date</label>
+                  <input type="date" class="form-control" id="end-date" name="end-date">
+                </div>
               </div>
-              <div class="form-group col-6">
-                <label for="end-date">Enter End Date</label>
-                <input type="date" class="form-control" id="end-date" name="end-date">
-              </div>
-              <div class="form-group col-12">
-                <label for="dayOfWeeks">Select Days of Week</label>
-                <select class="form-select" name="dayOfWeek" id="dayOfWeeks" multiple>
+              <div class="form-group">
+                <label for="dayOfWeeks">Select Which Days of Week</label>
+                <select multiple class="form-select" name="dayOfWeek" id="dayOfWeeks">
                   <option value=0>Sunday</option>
                   <option value=1>Monday</option>
                   <option value=2>Tuesday</option>
@@ -256,7 +258,7 @@
                   <option value=4>Thursday</option>
                   <option value=5>Friday</option>
                   <option value=6>Saturday</option>
-                </select> 
+                </select>
               </div>
             </div>
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -309,8 +311,7 @@
   </div>
 
   <!-- Modal that pops up to confirm deletion of a student record -->
-  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
