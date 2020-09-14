@@ -122,15 +122,13 @@ const displayMembers = function (data) {
     const updateBtnTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn">Update</button></td>`);
     const deleteBtnTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn">Delete</button></td>`);
 
-    const updateBtnDisabledTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn disabled">Update</button></td>`);
-    const deleteBtnDisabledTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn disabled">Delete</button></td>`);
-
     $('tbody.members').append(tableRow);
-    if (memberRole === "student") {
-      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
-    } else if (memberRole === "teacher") { // only allow teachers to change student records
-      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnDisabledTd, deleteBtnDisabledTd);
-    }
+    if (memberRole === "teacher") {
+      updateBtnTd.attr("disabled", true);
+      deleteBtnTd.attr("disabled", true);
+    };
+    tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
+
   })
 }
 
@@ -246,14 +244,16 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
 }
 
 const displayMemberClassInfo = function() {
-  // get eligible class based on level and isAdult
-  $.get(`/api/class_schedule/${level}/${isAdult}`)
+  const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
+  // get eligible class based on level and isAdult for week shown in table
+  $.get(`/api/class_schedule/${level}/${isAdult}/${weekNumber}`)
   .then(data => {
     // console.log(data);
     listEligibleClasses(data);
     listReachedLimitClasses(data);
   }).then(() => {
-    $.get(`/api/classes/${memberId}`)
+    // get classes the student is currently enrolled in
+    $.get(`/api/classes/${memberId}/${weekNumber}`)
       .then((data) => {
         if (data.length === 0) {
           return;
@@ -371,7 +371,10 @@ $('#enrollBtn').on('click', event => {
   const newSessions = [];
   $('td input:checked').each(function () {
     // console.log(this);
+    const sessionId = $(this).parents("td").attr("data-session");
+
     const checkboxVal = {
+      SessionId: sessionId,
       CalendarSessionId: $(this).val(),
       UserId: memberId
     }
@@ -386,8 +389,8 @@ $('#enrollBtn').on('click', event => {
         data: newSessions
       })
       .then((data) => {
-        console.log(data);
-        location.reload();
+        // console.log(data);
+        displayMemberClassInfo();
       })
       .catch(err => {
         console.log(err);
