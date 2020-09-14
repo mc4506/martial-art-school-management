@@ -83,6 +83,12 @@
 }
 .break{
 color: white;
+}
 
+.w{
+  background-color: white
+}
 
+.pad{
+  padding: 10px
 }
