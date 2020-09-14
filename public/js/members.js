@@ -76,12 +76,16 @@ const getEligibleClassLevel = function (rank) {
 const listEligibleClasses = function (results) {
 
   results.forEach(e => {
-    const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
-    // use checkbox value of SessionId to select class
-    inputEl.attr("value", `${e.id}`);
-    $(`#calSession${e.id}`).prepend(inputEl);
-    $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
-    $(`#calSession${e.id}`).css("background", "#FFBA25");
+    // console.log(moment() - moment(e.calendarDate));
+    // if class has passed, it is not eligible for selection
+    if((moment() - moment(e.calendarDate)) <= 0) {
+      const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
+      // use checkbox value of SessionId to select class
+      inputEl.attr("value", `${e.id}`);
+      $(`#calSession${e.id}`).prepend(inputEl);
+      $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
+      $(`#calSession${e.id}`).css("background", "#FFBA25");
+    } 
   })
 }
 
@@ -122,15 +126,13 @@ const displayMembers = function (data) {
     const updateBtnTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn">Update</button></td>`);
     const deleteBtnTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn">Delete</button></td>`);
 
-    const updateBtnDisabledTd = $(`<td id="update${e.id}"><button type="button" class="btn btn-warning updateBtn disabled">Update</button></td>`);
-    const deleteBtnDisabledTd = $(`<td id="delete${e.id}"><button type="button" class="btn btn-danger deleteBtn disabled">Delete</button></td>`);
-
     $('tbody.members').append(tableRow);
-    if (memberRole === "student") {
-      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
-    } else if (memberRole === "teacher") { // only allow teachers to change student records
-      tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnDisabledTd, deleteBtnDisabledTd);
-    }
+    if (memberRole === "teacher") {
+      updateBtnTd.attr("disabled", true);
+      deleteBtnTd.attr("disabled", true);
+    };
+    tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
+
   })
 }
 
@@ -139,17 +141,24 @@ const displayStudents = function (data) {
   $('ul.student-list').html("")
   data.forEach(e => {
     const listItemEl = $('<li class="list-group-item">');
-    const formCheckEl = $('<div class="form-check"></div>');
-    const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
-    const labelEl = $('<label class="form-check-label">');
-    // assign userId to checkbox value
-    inputEl.attr("value", `${e.UserId}`);
-    inputEl.attr("id", `student${e.UserId}`);
-    const memberRank = belt[e.User.certLevel];
-    labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
-    labelEl.attr("for", `student${e.UserId}`);
-    listItemEl.append(formCheckEl);
-    formCheckEl.append(inputEl, labelEl);
+
+    if(e.isPresent) {
+        const pEl = $('<p>');
+        pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`)
+    } else {
+        const formCheckEl = $('<div class="form-check"></div>');
+        const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
+        const labelEl = $('<label class="form-check-label">');
+        // assign userId to checkbox value
+        inputEl.attr("value", `${e.UserId}`);
+        inputEl.attr("id", `student${e.UserId}`);
+        const memberRank = belt[e.User.certLevel];
+        labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+        labelEl.attr("for", `student${e.UserId}`);
+        listItemEl.append(formCheckEl);
+        formCheckEl.append(inputEl, labelEl);
+    }
+    
     $('ul.student-list').append(listItemEl);
   })
 }
@@ -166,8 +175,8 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
   $('#addSessionModal').modal('toggle');
 
   // clear all form fields
-  $('form input').val("");
-  $('form select').val("");
+  $('form.add-session input').val("");
+  $('form.add-session select').val("");
 
   // if repeat class checkbox is checked show start/end date calendar to select dates
   $('#repeat-class').change(function (event) {
@@ -181,6 +190,8 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
       $('#start-date').attr("required", false);
       $('#end-date').attr("required", false);
       $('#start-date').val("");
+      $('#end-date').val("");
+      $('#dayOfWeeks').val("");
     };
   });
 
@@ -239,21 +250,30 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
     console.log(newSession);
     $.post("/api/new_session", newSession)
       .then(function (data) {
-        console.log(data);
-        location.reload();
+        $('#addSessionModal').modal("toggle");
+        const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
+        // console.log(data);
+        $.get(`/api/class_schedule/${weekNumber}`)
+        .then(function (data) {
+            // console.log(data);
+            // displayClassSchedule(data);
+            location.reload();
+        });
       });
   });
 }
 
 const displayMemberClassInfo = function() {
-  // get eligible class based on level and isAdult
-  $.get(`/api/class_schedule/${level}/${isAdult}`)
+  const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
+  // get eligible class based on level and isAdult for week shown in table
+  $.get(`/api/class_schedule/${level}/${isAdult}/${weekNumber}`)
   .then(data => {
-    // console.log(data);
+    console.log(data);
     listEligibleClasses(data);
     listReachedLimitClasses(data);
   }).then(() => {
-    $.get(`/api/classes/${memberId}`)
+    // get classes the student is currently enrolled in
+    $.get(`/api/classes/${memberId}/${weekNumber}`)
       .then((data) => {
         if (data.length === 0) {
           return;
@@ -302,7 +322,7 @@ const updateStudentClickEvents = function() {
     $('.student-name').text(`${firstName} ${lastName}`);
   });
 
-  $('#updateBtn').on('click', function() {
+  $('#updateStudentBtn').on('click', function() {
     const newCertLevel = getKeyByValue(belt, $('#rankSelect').val());
     const newRole = getKeyByValue(role, $('#roleSelect').val().toLowerCase());
 
@@ -311,7 +331,7 @@ const updateStudentClickEvents = function() {
       role: newRole,
     };
 
-    console.log(id, studentRecord);
+    // console.log(id, studentRecord);
 
     $.ajax({
       method: "PUT",
@@ -322,8 +342,8 @@ const updateStudentClickEvents = function() {
     })
   });
 
-  $('#confirmBtn').on('click', function() {
-    console.log(id);
+  $('#confirmDeleteBtn').on('click', function() {
+    // console.log(id);
     $.ajax({
       method: "DELETE",
       url: `/api/members/${id}`
@@ -371,7 +391,10 @@ $('#enrollBtn').on('click', event => {
   const newSessions = [];
   $('td input:checked').each(function () {
     // console.log(this);
+    const sessionId = $(this).parents("td").attr("data-session");
+
     const checkboxVal = {
+      SessionId: sessionId,
       CalendarSessionId: $(this).val(),
       UserId: memberId
     }
@@ -386,8 +409,8 @@ $('#enrollBtn').on('click', event => {
         data: newSessions
       })
       .then((data) => {
-        console.log(data);
-        location.reload();
+        // console.log(data);
+        displayMemberClassInfo();
       })
       .catch(err => {
         console.log(err);
@@ -479,5 +502,20 @@ $('.this-week').on('click', function () {
     });
 });
 
-
-// TODO Post attendance click event and api route to update UserSession attendance
+// Post attendance
+$('#attendanceBtn').on('click', function() {
+  const attendanceList = [];
+  $('input.is-present:checked').each(function() {
+    attendanceList.push( 
+      {
+      id: parseInt($(this).val()),
+      isPresent: true
+      }
+    );
+    console.log(attendanceList);
+    $.post("/api/attendance", attendanceList)
+    .then( () => {
+      $('#studentsModal').modal('toggle');
+    })
+  });
+})

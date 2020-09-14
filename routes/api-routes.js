@@ -69,8 +69,8 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    let dateA = moment().week(req.params.weekNumber).startOf('week');
-    let dateB = moment().week(req.params.weekNumber).endOf('week');
+    const dateA = moment().week(req.params.weekNumber).startOf('week');
+    const dateB = moment().week(req.params.weekNumber).endOf('week');
     console.log(dateA, dateB);
     db.CalendarSessions.findAll({
       where: {
@@ -82,10 +82,16 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/api/class_schedule/:level/:isAdult", async (req, res) => {
+  app.get("/api/class_schedule/:level/:isAdult/:weekNumber", async (req, res) => {
     // console.log(req.params.level);
+    const dateA = moment().week(req.params.weekNumber).startOf('week');
+    const dateB = moment().week(req.params.weekNumber).endOf('week');
+
     try {
       const results = await db.CalendarSessions.findAll({
+        where: {
+          calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
+        },
         include: {
           model: db.Sessions,
           where: {
@@ -123,6 +129,7 @@ module.exports = function (app) {
       })
     });
 
+    // wait until all promises are complete and then send response back
     Promise.all(promises)
       .then((results) => {
         res.json(results);
@@ -131,10 +138,19 @@ module.exports = function (app) {
       })
   });
 
-  app.get("/api/classes/:memberId", (req, res) => {
+  app.get("/api/classes/:memberId/:weekNumber", (req, res) => {
+    const dateA = moment().week(req.params.weekNumber).startOf('week');
+    const dateB = moment().week(req.params.weekNumber).endOf('week');
+
     db.UserSessions.findAll({
       where: {
         UserId: req.params.memberId
+      },
+      include: {
+        model: db.CalendarSessions, attributes: ['id'],
+        where: {
+            calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
+        }
       }
     }).then(data => {
       res.json(data)

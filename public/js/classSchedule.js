@@ -67,11 +67,15 @@ const generateTable = function(week) {
 }
 
 const displayClassSchedule = function (data) {
+    // clear table before displaying
+    $('tbody.schedule td').html("");
+
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
         const levelNum = data[i].Session.level;
         const limit = data[i].Session.inPersonLimit;
         const calSessionId = data[i].id;
+        const sessionId = data[i].SessionId;
 
         let adultclass = "";
         data[i].Session.adultclass ? adultclass = "Adults" : adultclass = "Juniors";
@@ -93,6 +97,7 @@ const displayClassSchedule = function (data) {
         newDiv.text(`${sessionName} - ${level} - ${adultclass} / In-Person limit of ${limit} people`);
 
         $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);
+        $(`td[data-cellvalue=${tdID}]`).attr("data-session", `${sessionId}`);
         $(`td[data-cellvalue=${tdID}]`).append(newDiv);
 
     }
