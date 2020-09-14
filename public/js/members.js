@@ -137,17 +137,24 @@ const displayStudents = function (data) {
   $('ul.student-list').html("")
   data.forEach(e => {
     const listItemEl = $('<li class="list-group-item">');
-    const formCheckEl = $('<div class="form-check"></div>');
-    const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
-    const labelEl = $('<label class="form-check-label">');
-    // assign userId to checkbox value
-    inputEl.attr("value", `${e.UserId}`);
-    inputEl.attr("id", `student${e.UserId}`);
-    const memberRank = belt[e.User.certLevel];
-    labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
-    labelEl.attr("for", `student${e.UserId}`);
-    listItemEl.append(formCheckEl);
-    formCheckEl.append(inputEl, labelEl);
+
+    if(e.isPresent) {
+        const pEl = $('<p>');
+        pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`)
+    } else {
+        const formCheckEl = $('<div class="form-check"></div>');
+        const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
+        const labelEl = $('<label class="form-check-label">');
+        // assign userId to checkbox value
+        inputEl.attr("value", `${e.UserId}`);
+        inputEl.attr("id", `student${e.UserId}`);
+        const memberRank = belt[e.User.certLevel];
+        labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+        labelEl.attr("for", `student${e.UserId}`);
+        listItemEl.append(formCheckEl);
+        formCheckEl.append(inputEl, labelEl);
+    }
+    
     $('ul.student-list').append(listItemEl);
   })
 }
@@ -164,8 +171,8 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
   $('#addSessionModal').modal('toggle');
 
   // clear all form fields
-  $('form input').val("");
-  $('form select').val("");
+  $('form.add-session input').val("");
+  $('form.add-session select').val("");
 
   // if repeat class checkbox is checked show start/end date calendar to select dates
   $('#repeat-class').change(function (event) {
@@ -179,6 +186,8 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
       $('#start-date').attr("required", false);
       $('#end-date').attr("required", false);
       $('#start-date').val("");
+      $('#end-date').val("");
+      $('#dayOfWeeks').val("");
     };
   });
 
@@ -237,8 +246,17 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
     console.log(newSession);
     $.post("/api/new_session", newSession)
       .then(function (data) {
-        console.log(data);
-        location.reload();
+        $('#addSessionModal').modal("toggle");
+        const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
+        // console.log(data);
+        $.get(`/api/class_schedule/${weekNumber}`)
+        .then(function (data) {
+            console.log(data);
+            displayClassSchedule(data);
+            applyHoverEvents();
+            applyTdClickEvents();
+        });
+        // location.reload();
       });
   });
 }
@@ -365,6 +383,10 @@ const getKeyByValue = function(obj, val) {
   }
 }
 
+const updateStudentToPresent = function() {
+
+}
+
 // click events
 $('#enrollBtn').on('click', event => {
   event.preventDefault();
@@ -482,5 +504,20 @@ $('.this-week').on('click', function () {
     });
 });
 
-
-// TODO Post attendance click event and api route to update UserSession attendance
+// Post attendance
+$('#attendanceBtn').on('click', function() {
+  const attendanceList = [];
+  $('input.is-present:checked').each(function() {
+    attendanceList.push( 
+      {
+      id: parseInt($(this).val()),
+      isPresent: true
+      }
+    );
+    console.log(attendanceList);
+    $.post("/api/attendance", attendanceList)
+    .then( () => {
+      $('#studentsModal').modal('toggle');
+    })
+  });
+})

@@ -67,6 +67,9 @@ const generateTable = function(week) {
 }
 
 const displayClassSchedule = function (data) {
+    // clear table before displaying
+    $('tbody.schedule td').html("");
+
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
         const levelNum = data[i].Session.level;
