@@ -3,17 +3,16 @@ $(document).ready(() => {
   // and updates the HTML on the page
   addModal();
   $.get("/api/user_data").then(data => {
-    console.log(data);
     userInfo = data;
+    console.log(userInfo);
     $("span.member").text(userInfo.firstName + " " + userInfo.lastName);
-  });
-  getTopics(1);
-  getKicks(1);
-
-  $.get("/api/enroll_class/1").then(data => {
-    console.log(data);
-  }).catch(function(err){
-    console.log(err);
+  }).then(function () {
+    if (userInfo.memberStatus === 0) {
+      $("#topic").hide();
+      $("#topicAdd").hide();
+    }
+    getTopics(1);
+    getKicks(1);
   });
 });
 var userInfo;
@@ -21,7 +20,7 @@ var userInfo;
 $("#topicAdd").on("click", function (event) {
   event.preventDefault();
   if ($("#topic").val() === "") {
-    alertMe("Input Error","Enter something!\n You forgot to push keys!!!!\n Try again!!\n You can DO IT!!!!")
+    alertMe("Input Error", "Enter something!\n You forgot to push keys!!!!\n Try again!!\n You can DO IT!!!!")
     return;
   }
   // Make a newTopic object
@@ -70,8 +69,11 @@ function getKicks(num) {
     if (data.length !== 0) {
       let oneKick = {};
       let kicks = [];
-      for (var i = data.length-1; i>= 0; i--) {
+      console.log(data);
+      for (var i = data.length - 1; i >= 0; i--) {
         oneKick = {
+          id: data[i].id,
+          memberStatus: userInfo.memberStatus===1? true:false, 
           name: data[i].User.firstName + ' ' + data[i].User.lastName + " kicks.. ",
           message: data[i].message,
           time: moment(data[i].createdAt).format("h:mma on dddd")
@@ -97,6 +99,21 @@ function getKicks(num) {
   });
 };
 
+// When user clicks delete-btn
+function delButtonClick(event) {
+  let recordId=$(event.target).attr("data-id");
+  console.log(recordId)
+  // $.delete("/api/kick/"+recordId).then( response => {
+  //   location.reload();
+  // })
+  $.ajax({
+    method: "DELETE",
+    url: "/api/kick/"+recordId
+  }).then( response => {
+    location.reload();
+  })
+};
+
 // When user clicks add-btn
 $("#kick-submit").on("click", function (event) {
   event.preventDefault();
@@ -112,12 +129,18 @@ $("#kick-submit").on("click", function (event) {
   $.post("/api/kicknew", newKick)
     // On success, run the following code
     .then(function () {
-      var row = $("<div>");
-      row.addClass("kick");
-      row.append("<p>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </p>");
-      row.append("<p>" + newKick.message + "</p>");
-      row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
-      $("#kicks-area").prepend(row);
+      $.post("/api/kickID",newKick)
+      .then(res=>{
+        var row = $("<div>");
+        row.addClass("kick");
+        row.append("<p>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </p>");
+        row.append("<p>" + newKick.message + "</p>");
+        row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
+        if (userInfo.memberStatus===1){
+          row.append('<button class="btn btn-danger" onclick="delButtonClick(event)" data-id=' + res.id + ">Delete</button");
+        }
+        $("#kicks-area").prepend(row);
+      })     
     });
 
   // Empty each input box by replacing the value with an empty string

@@ -288,7 +288,25 @@ module.exports = function (app) {
       })
     }
   })
-
+  app.post("/api/attendance/:id",  function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      console.log("params ", req.params.id);
+      console.log("body ", req.body);
+        // id: parseInt($(this).val()),
+        // isPresent: true
+      for (let i=0; i<req.body.attendance.length; i++){
+        db.UserSessions.update({ isPresent: parseInt(req.body.attendance[i].isPresent)},
+          { where: { CalendarSessionId: req.params.id, UserId: parseInt(req.body.attendance[i].id)}
+        }).then(function (results) {
+          console.log(results);
+        })
+      }
+      res.json({});
+    }
+  })
 };
 
 const hasReachedInPersonLimit = async function (id) {

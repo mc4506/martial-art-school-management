@@ -89,6 +89,9 @@
           <p>{{name}}</p>
           <p>{{message}}</p>
           <p>{{time}}</p> 
+          {{#if memberStatus}}
+	    	<button class="btn btn-danger" onclick="delButtonClick(event)" data-id={{id}}>Delete</button>
+          {{/if}}
         </div>                    
         {{/each}}                          
     </script>

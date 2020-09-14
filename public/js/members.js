@@ -508,14 +508,22 @@ $('#attendanceBtn').on('click', function() {
   $('input.is-present:checked').each(function() {
     attendanceList.push( 
       {
-      id: parseInt($(this).val()),
-      isPresent: true
+      id: $(this).val(),
+      isPresent: 1
       }
     );
-    console.log(attendanceList);
-    $.post("/api/attendance", attendanceList)
-    .then( () => {
-      $('#studentsModal').modal('toggle');
-    })
   });
+  $('input.is-present:not(:checked)').each(function() {
+    attendanceList.push( 
+      {
+      id: $(this).val(),
+      isPresent: 0
+      }
+    );
+  });
+  console.log(attendanceList);
+  $.post("/api/attendance/"+$('ul.list-group.student-list').attr("data-calsession"),{'attendance' : attendanceList})
+  .then( () => {
+    $('#studentsModal').modal('toggle');
+  })
 })
