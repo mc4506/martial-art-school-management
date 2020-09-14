@@ -263,15 +263,14 @@ module.exports = function (app) {
       // The user is not logged in, send back to startup screen
       res.redirect("/");
     } else {
+      console.log(req.body, "params ", req.params.id);
       db.User.update({
         certLevel: req.body.certLevel,
-        role: req.body.role,
-        where: {
-          id: req.params.id
-        }
+        memberStatus: req.body.role,},
+        { where: { id: req.params.id}
       }).then(function (results) {
         console.log(results);
-
+        res.json({});
       })
     }
   })
@@ -280,13 +279,12 @@ module.exports = function (app) {
       // The user is not logged in, send back to startup screen
       res.redirect("/");
     } else {
-      db.User.delete({
-        where: {
-          id: req.params.id
-        }
+      console.log("params ", req.params.id);
+      db.User.destroy({
+        where: { id: req.params.id}
       }).then(function (results) {
         // console.log(results);
-
+        res.json({});
       })
     }
   })
