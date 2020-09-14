@@ -141,6 +141,7 @@ const displayStudents = function (data) {
   $('ul.student-list').html("")
   data.forEach(e => {
     const listItemEl = $('<li class="list-group-item">');
+    const memberRank = belt[e.User.certLevel];
 
     if(e.isPresent) {
         const pEl = $('<p>');
@@ -153,7 +154,6 @@ const displayStudents = function (data) {
         // assign userId to checkbox value
         inputEl.attr("value", `${e.UserId}`);
         inputEl.attr("id", `student${e.UserId}`);
-        const memberRank = belt[e.User.certLevel];
         labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
         labelEl.attr("for", `student${e.UserId}`);
         listItemEl.append(formCheckEl);
