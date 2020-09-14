@@ -255,12 +255,10 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
         // console.log(data);
         $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
-            console.log(data);
-            displayClassSchedule(data);
-            applyHoverEvents();
-            applyTdClickEvents();
+            // console.log(data);
+            // displayClassSchedule(data);
+            location.reload();
         });
-        // location.reload();
       });
   });
 }
@@ -385,10 +383,6 @@ const getKeyByValue = function(obj, val) {
       if (obj[prop] === val) return prop;
     }
   }
-}
-
-const updateStudentToPresent = function() {
-
 }
 
 // click events
