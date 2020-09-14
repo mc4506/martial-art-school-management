@@ -76,12 +76,16 @@ const getEligibleClassLevel = function (rank) {
 const listEligibleClasses = function (results) {
 
   results.forEach(e => {
-    const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
-    // use checkbox value of SessionId to select class
-    inputEl.attr("value", `${e.id}`);
-    $(`#calSession${e.id}`).prepend(inputEl);
-    $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
-    $(`#calSession${e.id}`).css("background", "#FFBA25");
+    // console.log(moment() - moment(e.calendarDate));
+    // if class has passed, it is not eligible for selection
+    if((moment() - moment(e.calendarDate)) <= 0) {
+      const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
+      // use checkbox value of SessionId to select class
+      inputEl.attr("value", `${e.id}`);
+      $(`#calSession${e.id}`).prepend(inputEl);
+      $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
+      $(`#calSession${e.id}`).css("background", "#FFBA25");
+    } 
   })
 }
 
@@ -266,7 +270,7 @@ const displayMemberClassInfo = function() {
   // get eligible class based on level and isAdult for week shown in table
   $.get(`/api/class_schedule/${level}/${isAdult}/${weekNumber}`)
   .then(data => {
-    // console.log(data);
+    console.log(data);
     listEligibleClasses(data);
     listReachedLimitClasses(data);
   }).then(() => {
