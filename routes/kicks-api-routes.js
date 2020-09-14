@@ -17,6 +17,7 @@ module.exports = function (app) {
     }
   });
 
+  // get all kicks of 1 topic
   app.get("/api/topic/:id", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
@@ -35,6 +36,24 @@ module.exports = function (app) {
     }
   });
 
+  app.post("/api/kickID", function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      db.Kick.findOne({
+        where: {
+         message: req.body.message,
+         UserId: req.body.UserId,
+         KickTopicId: req.body.KickTopicId
+        },
+        
+      }).then(function (dbKicks) {
+
+        res.json(dbKicks);
+      });
+    }
+  });
 
   // Add a kick
   app.post("/api/kicknew", function (req, res) {
@@ -59,6 +78,22 @@ module.exports = function (app) {
         });
     }
   });
+
+  // delete kick "/api/kick/"+recordId
+  app.delete("/api/kick/:id", function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      console.log("params ", req.params.id);
+      db.Kick.destroy({
+        where: { id: req.params.id}
+      }).then(function (results) {
+        // console.log(results);
+        res.json({});
+      })
+    }
+  })
 
   // Add a new topickick
   app.post("/api/topicnew", function (req, res) {
