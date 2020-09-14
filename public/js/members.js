@@ -128,8 +128,8 @@ const displayMembers = function (data) {
 
     $('tbody.members').append(tableRow);
     if (memberRole === "teacher") {
-      updateBtnTd.attr("disabled", true);
-      deleteBtnTd.attr("disabled", true);
+      updateBtnTd.children().attr("disabled", true);
+      deleteBtnTd.children().attr("disabled", true);
     };
     tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
 
@@ -144,7 +144,8 @@ const displayStudents = function (data) {
 
     if(e.isPresent) {
         const pEl = $('<p>');
-        pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`)
+        pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+        listItemEl.append(pEl);
     } else {
         const formCheckEl = $('<div class="form-check"></div>');
         const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
@@ -195,16 +196,6 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
     };
   });
 
-  // function getWeeklySchedule(){
-  //   let sum=0;
-  //   let arr=$('#dayOfWeeks').val()
-  //   for (let i=1; i<8; i++){}
-  //     console.log($('#dayOfWeeks').val())
-      
-    
-  //   console.log(sum.toString(2))
-  //   return sum
-  // }
   // add a session and calendar sessions
   $('form.add-session').on('submit', function (event) {
     event.preventDefault();
@@ -256,8 +247,10 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
         $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
             // console.log(data);
-            // displayClassSchedule(data);
-            location.reload();
+            displayClassSchedule(data);
+            // applyHoverEvents();
+            // applyTdClickEvents();
+            // location.reload();
         });
       });
   });
@@ -286,19 +279,25 @@ const displayMemberClassInfo = function() {
 
 const applyHoverEvents = function () {
   $('td').css("cursor", "pointer");
-  $('td > .class-info').hover(function () {
-    $(this).parent().addClass("class-info-hover");
-  }, function () {
-    $(this).parent().removeClass("class-info-hover");
-  });
+  $(document).on({
+    mouseenter: function () {
+      $(this).parent().addClass("class-info-hover");
+    }, 
+    mouseleave: function () {
+      $(this).parent().removeClass("class-info-hover");
+    }
+  }, 'td > .class-info');
 
-  $('td:not([id])').hover(function () {
-    $(this).text("+")
-    $(this).addClass("add-session-hover");
-  }, function () {
-    $(this).text("")
-    $(this).removeClass("add-session-hover");
-  });
+  $(document).on({
+    mouseenter: function () {
+      $(this).text("+")
+      $(this).addClass("add-session-hover");
+    }, 
+      mouseleave: function () {
+      $(this).text("")
+      $(this).removeClass("add-session-hover");
+    }
+  }, 'td:not([id])');
 }
 
 const updateStudentClickEvents = function() {
