@@ -69,52 +69,66 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    const dateA = moment().week(req.params.weekNumber).startOf('week');
-    const dateB = moment().week(req.params.weekNumber).endOf('week');
-    console.log(dateA, dateB);
-    db.CalendarSessions.findAll({
-      where: {
-        calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
-      },
-      include: { model: db.Sessions }
-    }).then(function (results) {
-      res.json(results);
-    });
-  });
-
-  app.get("/api/class_schedule/:level/:isAdult/:weekNumber", async (req, res) => {
-    // console.log(req.params.level);
-    const dateA = moment().week(req.params.weekNumber).startOf('week');
-    const dateB = moment().week(req.params.weekNumber).endOf('week');
-
-    try {
-      const results = await db.CalendarSessions.findAll({
+    if (!req.user) {
+      // The user is not logged in, send back an empty object
+      res.json({});
+    } else {
+      const dateA = moment().week(req.params.weekNumber).startOf('week');
+      const dateB = moment().week(req.params.weekNumber).endOf('week');
+      console.log(dateA, dateB);
+      db.CalendarSessions.findAll({
         where: {
           calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
         },
-        include: {
-          model: db.Sessions,
-          where: {
-            level: req.params.level,
-            adultclass: req.params.isAdult
-          }
-        }
+        include: { model: db.Sessions }
+      }).then(function (results) {
+        res.json(results);
       });
-      // console.log(results);
-      // check if classes are full. If full add a flag to an updatedResults array
-      const data = await updateResults(results);
-      // console.log(data);
-      res.json(data);
-    } catch (err) {
-      res.json(err);
+    }
+  });
+
+  app.get("/api/class_schedule/:level/:isAdult/:weekNumber", async (req, res) => {
+    if (!req.user) {
+      // The user is not logged in, send back an empty object
+      res.json({});
+    } else {
+      const dateA = moment().week(req.params.weekNumber).startOf('week');
+      const dateB = moment().week(req.params.weekNumber).endOf('week');
+
+      try {
+        const results = await db.CalendarSessions.findAll({
+          where: {
+            calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
+          },
+          include: {
+            model: db.Sessions,
+            where: {
+              level: req.params.level,
+              adultclass: req.params.isAdult
+            }
+          }
+        });
+        // console.log(results);
+        // check if classes are full. If full add a flag to an updatedResults array
+        const data = await updateResults(results);
+        // console.log(data);
+        res.json(data);
+      } catch (err) {
+        res.json(err);
+      }
     }
   });
 
 
   app.get("/api/all_members", (req, res) => {
-    db.User.findAll().then(function (results) {
-      res.json(results);
-    })
+    if (!req.user) {
+      // The user is not logged in, send back an empty object
+      res.json({});
+    } else {
+      db.User.findAll().then(function (results) {
+        res.json(results);
+      })
+    }
   });
 
   app.post("/api/enroll", (req, res) => {
@@ -139,59 +153,50 @@ module.exports = function (app) {
   });
 
   app.get("/api/classes/:memberId/:weekNumber", (req, res) => {
-    const dateA = moment().week(req.params.weekNumber).startOf('week');
-    const dateB = moment().week(req.params.weekNumber).endOf('week');
+    if (!req.user) {
+      // The user is not logged in, send back an empty object
+      res.json({});
+    } else {
+      const dateA = moment().week(req.params.weekNumber).startOf('week');
+      const dateB = moment().week(req.params.weekNumber).endOf('week');
 
-    db.UserSessions.findAll({
-      where: {
-        UserId: req.params.memberId
-      },
-      include: {
-        model: db.CalendarSessions, attributes: ['id'],
+      db.UserSessions.findAll({
         where: {
+          UserId: req.params.memberId
+        },
+        include: {
+          model: db.CalendarSessions, attributes: ['id'],
+          where: {
             calendarDate: { [Op.gt]: dateA, [Op.lt]: dateB }
+          }
         }
-      }
-    }).then(data => {
-      res.json(data)
-    }).catch(err => {
-      res.send(err);
-    })
+      }).then(data => {
+        res.json(data)
+      }).catch(err => {
+        res.send(err);
+      })
+    }
   });
 
-  // app.get("/api/enrollto_class/:id", (req, res) => {
-  //   db.UserSessions.findAll({
-  //     where: {
-  //       CalendarSessionId: req.params.id
-  //     }
-  //   }).then(function (users) {
-  //     getAllStudents(users)
-  //     .then( students => {
-  //       res.json(students);
-  //     });   
-  //   });
-  // });
-
   app.get("/api/enrollto_class/:id", (req, res) => {
-    console.log(req.params.id)
-    // db.UserSessions.findAll(
-
-    // )
-    // .then( results => {
-    //   res.json(results);
-    // });
-    db.UserSessions.findAll({
-      where: {
-        CalendarSessionId: req.params.id
-      },
-      include: {
-        model: db.User, attributes: ['firstName', 'lastName', 'certLevel'],
-      }
-    }).then(results => {
-      res.json(results);
-    }).catch(err => {
-      res.send(err);
-    });
+    if (!req.user) {
+      // The user is not logged in, send back an empty object
+      res.json({});
+    } else {
+      console.log(req.params.id)
+      db.UserSessions.findAll({
+        where: {
+          CalendarSessionId: req.params.id
+        },
+        include: {
+          model: db.User, attributes: ['firstName', 'lastName', 'certLevel'],
+        }
+      }).then(results => {
+        res.json(results);
+      }).catch(err => {
+        res.send(err);
+      });
+    }
   });
 
   app.post("/api/new_session", function (req, res) {
@@ -257,7 +262,7 @@ module.exports = function (app) {
       });
     }
   });
-  
+
   app.put('/api/members/:id', function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
@@ -266,12 +271,14 @@ module.exports = function (app) {
       console.log(req.body, "params ", req.params.id);
       db.User.update({
         certLevel: req.body.certLevel,
-        memberStatus: req.body.role,},
-        { where: { id: req.params.id}
-      }).then(function (results) {
-        console.log(results);
-        res.json({});
-      })
+        memberStatus: req.body.role,
+      },
+        {
+          where: { id: req.params.id }
+        }).then(function (results) {
+          console.log(results);
+          res.json({});
+        })
     }
   })
   app.delete('/api/members/:id', function (req, res) {
@@ -281,28 +288,29 @@ module.exports = function (app) {
     } else {
       console.log("params ", req.params.id);
       db.User.destroy({
-        where: { id: req.params.id}
+        where: { id: req.params.id }
       }).then(function (results) {
         // console.log(results);
         res.json({});
       })
     }
   })
-  app.post("/api/attendance/:id",  function (req, res) {
+  app.post("/api/attendance/:id", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
       res.redirect("/");
     } else {
       console.log("params ", req.params.id);
       console.log("body ", req.body);
-        // id: parseInt($(this).val()),
-        // isPresent: true
-      for (let i=0; i<req.body.attendance.length; i++){
-        db.UserSessions.update({ isPresent: parseInt(req.body.attendance[i].isPresent)},
-          { where: { CalendarSessionId: req.params.id, UserId: parseInt(req.body.attendance[i].id)}
-        }).then(function (results) {
-          console.log(results);
-        })
+      // id: parseInt($(this).val()),
+      // isPresent: true
+      for (let i = 0; i < req.body.attendance.length; i++) {
+        db.UserSessions.update({ isPresent: parseInt(req.body.attendance[i].isPresent) },
+          {
+            where: { CalendarSessionId: req.params.id, UserId: parseInt(req.body.attendance[i].id) }
+          }).then(function (results) {
+            console.log(results);
+          })
       }
       res.json({});
     }
