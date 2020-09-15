@@ -14,7 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
     <link rel="stylesheet" href="./stylesheets/style.css">
     <link rel="stylesheet" href="./stylesheets/kicks_style.css">
-<script type="text/javascript" src="./js/kick.js" defer></script>
+    <script type="text/javascript" src="./js/kick.js" defer></script>
     <script type="text/javascript" src="./js/commonFunctions.js" defer></script>
 </head>
 
@@ -35,39 +35,48 @@
 
     <main class="container">
 
-        <h2 class="display-4 font-weight-bold">Welcome <span class="member"></span></h2>
+        <h2 class="display-4 font-weight-bold pad">Welcome <span class="member"></span></h2>
 
         <div class="jumbotron jumbotron-fluid bg-transparent">
             <div class="text-light align-middle">
                 <video autoplay muted loop id="myVideo">
                     <source src="./imgs/mma.mov" type="video/mp4">
                 </video>
-                <div class="row">
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <br>
-                        <input type="text" class="form-control" id="topic" placeholder="Add new topic">
-                        <button id="topicAdd" class="btn btn-danger" style="margin-left: 10px;">Add</button>
-                        <br>
-                        <p class="cool-font" for="topics">Choose a Topic:</p>
-                        <figure id="topicChoice"></figure>
+                <div class="container">
+                    <div class="d-flex flex-row justify-content-center">
+                        <div class="col-lg-8">
 
-                        <br>
-                        <p class="cool-font">Kick</p>
-                        <textarea class="form-control" rows="3" id="kick-box"
-                            placeholder="Enter your Kick Here!"></textarea>
-                        <button id="kick-submit" class="btn btn-danger" style="margin-left: 10px;">Submit!</button>
-                    </div>
-                </div>
+                            <input type="text" class="form-control" id="topic" placeholder="Add new topic">
+                            <div class="d-flex justify-content-center">
+                                <button id="topicAdd" class="btn btn-danger" style="margin-left: 10px;">Add</button>
+                            </div>
 
-                <div class="row">
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <h2 class="cool-font">Kicks list:</h2>
-                        <hr>
-                        <div id="kicks-area"></div>
+                            <p class="cool-font" for="topics">Choose a Topic:</p>
+                            <figure id="topicChoice"></figure>
+
+
+                            <p class="cool-font">Kick</p>
+                            <textarea class="form-control" rows="3" id="kick-box"
+                                placeholder="Enter your Kick Here!"></textarea>
+                            <div class="d-flex justify-content-center">
+                                <button id="kick-submit" class="btn btn-danger"
+                                    style="margin-left: 10px;">Submit!</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="d-flex flex-row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="cool-font">Kicks list:</h2>
+                <hr>
+                <div id="kicks-area"></div>
+            </div>
+        </div>
+
+
 
     </main>
     <!-- PIN ME TO THE BOTTOM-->
