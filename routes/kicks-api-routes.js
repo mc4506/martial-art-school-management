@@ -96,6 +96,22 @@ app.get("/api/kickTopic/:id", function (req, res) {
     }
   });
 
+  // delete topic 
+  app.delete("/api/topic/:id", function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      // console.log("params ", req.params.id);
+      db.KickTopic.destroy({
+        where: { id: req.params.id}
+      }).then(function (results) {
+        // console.log(results);
+        res.json({});
+      })
+    }
+  })
+
   // delete kick "/api/kick/"+recordId
   app.delete("/api/kick/:id", function (req, res) {
     if (!req.user) {

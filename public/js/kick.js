@@ -3,18 +3,7 @@ $(document).ready(() => {
   // and updates the HTML on the page
   addModal();
   loadPageTopic(1)
-  // $.get("/api/user_data").then(data => {
-  //   userInfo = data;
-  //   console.log(userInfo);
-  //   $("span.member").text(userInfo.firstName + " " + userInfo.lastName);
-  // }).then(function () {
-  //   if (userInfo.memberStatus === 0) {
-  //     $("#topic").hide();
-  //     $("#topicAdd").hide();
-  //   }
-  //   getTopics(1);
-  //   getKicks(1);
-  // });
+
 });
 var userInfo;
 
@@ -28,12 +17,24 @@ function loadPageTopic(num) {
     if (userInfo.memberStatus === 0) {
       $("#topic").hide();
       $("#topicAdd").hide();
+      $("#topicDel").hide();
     }
-    getTopics(num);
-    getKicks(num);
+    getTopics(1);
+    getKicks(1);
   });
-
 }
+
+$("#topicDel").on("click", function (event) {
+  let recID=$("#topics").val();
+  console.log(recID)
+  $.ajax({
+    method: "DELETE",
+    url: "/api/topic/" + recID
+  }).then(response => {
+    getTopics(1);
+    getKicks(1);
+  })
+});
 
 $("#topicAdd").on("click", function (event) {
   event.preventDefault();
@@ -51,11 +52,12 @@ $("#topicAdd").on("click", function (event) {
     // On success, run the following code
     .then(function () {
       getTopics(0);
-    })
-    .then(function () {
       $("#kicks-area").html("");
-      $("#topics").val(1);
-    });
+    })
+    // .then(function () {
+      
+    //   $("#topics").val(1);
+    // });
 });
 
 function getTopics(boo) {
@@ -69,10 +71,10 @@ function getTopics(boo) {
     $("#topic").val("");
     if (boo === 0) {
       // select last topic from KickTopic table
-      $("#topics").val(data.length);
+      $("#topics").val(data[data.length-1].id);
     } else {
-      // select boo topic from KickTopic table
-      $("#topics").val(boo);
+      // select first topic from KickTopic table
+      $("#topics").val(data[0].id);
     }
   });
 }
@@ -129,8 +131,7 @@ function delButtonClick(event) {
       method: "DELETE",
       url: "/api/kick/" + recordId
     }).then(response => {
-      $("#kicks-area").html("");
-      loadPageTopic(topicID);
+      $("#id_"+recordId).hide(600);
     })
   })
 
@@ -153,7 +154,7 @@ $("#kick-submit").on("click", function (event) {
     .then(function () {
       $.post("/api/kickID", newKick)
         .then(res => {
-          var row = $("<div>");
+          var row = $(`<div id='id_${res.id}'>`);
           row.addClass("kick");
           row.append("<p>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </p>");
           row.append("<p>" + newKick.message + "</p>");

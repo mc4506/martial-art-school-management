@@ -69,10 +69,10 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    if (!req.user) {
-      // The user is not logged in, send back an empty object
-      res.json({});
-    } else {
+    // if (!req.user) {
+    //   // The user is not logged in, send back an empty object
+    //   res.json({});
+    // } else {
       const dateA = moment().week(req.params.weekNumber).startOf('week');
       const dateB = moment().week(req.params.weekNumber).endOf('week');
       console.log(dateA, dateB);
@@ -84,7 +84,7 @@ module.exports = function (app) {
       }).then(function (results) {
         res.json(results);
       });
-    }
+    // }
   });
 
   app.get("/api/class_schedule/:level/:isAdult/:weekNumber", async (req, res) => {
