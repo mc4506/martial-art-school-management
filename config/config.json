@@ -1,6 +1,8 @@
 {
   "development": {
-   
+    "use_env_variable": "LOCALDB"
+  },
+  "sergeyPC": {
     "username": "root",
     "password": "asdf1234",
     "database": "mma_db",

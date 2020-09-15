@@ -37,6 +37,12 @@
   background: #aaaaaa;
 }
 
+.add-session-hover {
+  font-size: 50px;
+  color: #dddddd;
+  text-align: center;
+}
+
 #myVideo {
   position: fixed;
   top: 36px;
@@ -77,6 +83,12 @@
 }
 .break{
 color: white;
+}
 
+.w{
+  background-color: white
+}
 
+.pad{
+  padding: 10px
 }

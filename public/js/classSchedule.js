@@ -1,17 +1,12 @@
 $(document).ready(function () {
 
-    $("#currentMonth").text(moment().format("MMMM YYYY"));
-    for (let i = 0; i < 7; i++) {
-        let dayOfWeek = moment().startOf("week").add(i, "days").format("dddd M/D");
-        $(`#day${i}`).text(dayOfWeek);
-    };
-
+    const weekNumber = moment().week();
+    $("#currentMonth").text(moment().week(weekNumber).format("MMMM YYYY"));
     // const dayOfWeek = moment().startOf("week").add(1, "days").format("YYYY-MM-DD");
     // console.log(dayOfWeek);
-    const weekNumber = moment().week();
     // console.log(moment("12/26/2020", "MM/DD/YYYY").week());
 
-    generateTable();
+    generateTable(weekNumber);
 
     $.get(`/api/class_schedule/${weekNumber}`)
         .then(function (data) {
@@ -22,7 +17,7 @@ $(document).ready(function () {
 
 });
 
-const generateTable = function () {
+const generateTable = function(week) {
     const tableBody = $("tbody.schedule");
 
     // set a unique data-value for each table cell
@@ -30,8 +25,13 @@ const generateTable = function () {
 
     // first class at 10am
     let classTime = 10;
-    // last class at 6pm
+    // last class at 7pm
     const numberOfRows = 10;
+
+    $('#weekNum').attr("data-week-num", week);
+
+    // clear table if previously exists
+    $('tbody.schedule').html("");
 
     for (let i = 0; i < numberOfRows; i++) {
         const tableRow = $("<tr>");
@@ -46,9 +46,17 @@ const generateTable = function () {
         tableRow.append(tableHead);
 
         for (let j = 0; j < 7; j++) {
+            let dayOfWeek = moment().week(week).startOf("week").add(j, "days").format("dddd M/D");
+            $(`#day${j}`).text(dayOfWeek);
             const tableData = $("<td>")
             // assign unique data value to each td cell
             tableData.attr("data-cellvalue", dataCellValue);
+
+            // assign date value to each td cell
+            const dataDateValue = moment().week(week).startOf("week").add(j, "days").format("YYYY-MM-DD");
+            // console.log(dataDateValue);
+            tableData.attr("data-datevalue", dataDateValue);
+            tableData.attr("data-timevalue", classTime);
 
             // tableData.text(`day: ${j}, classTime: ${classTime}, value: ${dataValue}`);
             tableRow.append(tableData);
@@ -59,20 +67,37 @@ const generateTable = function () {
 }
 
 const displayClassSchedule = function (data) {
-    
+    // clear table before displaying
+    $('tbody.schedule td').html("");
+
     for (let i = 0; i < data.length; i++) {
         const sessionName = data[i].Session.sessionName;
+        const levelNum = data[i].Session.level;
         const limit = data[i].Session.inPersonLimit;
         const calSessionId = data[i].id;
+        const sessionId = data[i].SessionId;
+
+        let adultclass = "";
+        data[i].Session.adultclass ? adultclass = "Adults" : adultclass = "Juniors";
+        
+        let level = "";
+        if (levelNum === 1) {
+            level = "Beginner";
+        } else if (levelNum === 2) {
+            level = "Intermediate";
+        } else {
+            level = "Advanced";
+        };
 
         // get unique cell value based on day and time of class. Use this to populate the correct cell in the table
-        const tdID = (data[i].startTime - 10) * 7 + data[i].CalendarDay.dayOfWeek;
+        const tdID = (data[i].startTime - 10) * 7 + moment(data[i].calendarDate).day();
         // console.log(tdID);
         // assign a unique sessionId to each non-empty table cell
         const newDiv = $('<div class="class-info">');
-        newDiv.text(`${sessionName} / In-Person limit of ${limit} people`);
+        newDiv.text(`${sessionName} - ${level} - ${adultclass} / In-Person limit of ${limit} people`);
 
         $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);
+        $(`td[data-cellvalue=${tdID}]`).attr("data-session", `${sessionId}`);
         $(`td[data-cellvalue=${tdID}]`).append(newDiv);
 
     }
