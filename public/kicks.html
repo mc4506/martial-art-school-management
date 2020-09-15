@@ -53,7 +53,9 @@
 
                             <p class="cool-font" for="topics">Choose a Topic:</p>
                             <figure id="topicChoice"></figure>
-
+                            <div class="d-flex justify-content-center">
+                                <button id="topicDel" class="btn btn-danger" style="margin-left: 10px;">Delete</button>
+                            </div>
 
                             <p class="cool-font">Kick</p>
                             <textarea class="form-control" rows="3" id="kick-box"
@@ -94,7 +96,7 @@
     <!-- Handlebars -->
     <script id="example-template" type="text/x-handlebars-template">
         {{#each kicks}}
-        <div class="kick">
+        <div class="kick" id=id_{{id}}>
           <p>{{name}}</p>
           <p>{{message}}</p>
           <p>{{time}}</p> 
