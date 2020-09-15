@@ -52,7 +52,7 @@ $(document).ready(() => {
             displayMembers(data);
           }).then(() => {
             updateStudentClickEvents();
-            // applyHoverEvents();
+            applyHoverEvents();
             applyTdClickEvents();
           });
       };
