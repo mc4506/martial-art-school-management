@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="./stylesheets/style.css">
     <link rel="stylesheet" href="./stylesheets/kicks_style.css">
     <script type="text/javascript" src="./js/kick.js" defer></script>
-    <script type="text/javascript" src="./js/commonFunctions.js" defer></script>
+    <script type="text/javascript" src="./js/contact.js" defer></script>
 </head>
 
 <body>
@@ -89,41 +89,45 @@
 
     <main class="container">
 
-        <h2 class="display-4 font-weight-bold">Contact Us <span class="member"></span></h2>
+        <h2 class="display-4 font-weight-bold">Contact Us</h2>
+        <div class="col-lg-8 w">
+            <div>
+                <form class="contactUs">
+                    <div class="form-group">
+                        <label for="first name">First Name</label>
+                        <input type="text" class="form-control" id="fname" placeholder="First name">
+                    </div>
+                    <div class="form-group">
+                        <label for="last name">Last Name</label>
+                        <input type="text" class="form-control" id="lname" placeholder="Last name">
+                    </div>
+                    <div class="form-group">
+                        <label for="faq">Frequently Asked Questions</label>
+                        <select class="form-control" name="faq" id="faq">
+                            <option value="Classes">Classes</option>
+                            <option value="sessions">Sessions</option>
+                            <option value="usa">USA</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <textarea class="form-control" id="subject" name="subject" rows="5"
+                            placeholder="Your Message Goes Here"></textarea>
+                    </div>
+                    <input type="submit" value="Submit" class="btn btn-danger" id="submitBTN">
+                </form>
+            </div>
+        </div>
 
         <div class="jumbotron jumbotron-fluid bg-transparent">
             <div class="text-light align-middle">
                 <video autoplay muted loop id="myVideo">
                     <source src="./imgs/mma.mov" type="video/mp4">
                 </video>
-                
-                <!-- <div class="container"> -->
-                  <div class="row">
-                    <div class="col-sm-8 col-sm-offset-2">
-                        <br>
-                  
-                  <form action="action_page.php">
-                
-                    <label for="fname">First Name</label>
-                    <input type="text" id="fname" name="firstname" placeholder="Your name..">
-                
-                    <label for="lname">Last Name</label>
-                    <input type="text" id="lname" name="lastname" placeholder="Your last name..">
-                
-                    <label for=faq>FAQ</label>
-                    <select id="faq" name="faq">
-                      <option value="Classes">Classes</option>
-                      <option value="sessions">sessions</option>
-                      <option value="pricing">pricing</option>
-                    </select>
-                
-                    <label for="subject">Subject</label>
-                    <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-                
-                    <input type="submit" value="Submit">
-                
-                  </form>
-                </div>
+            </div>
+        </div>
+
+        <!-- <div class="container"> -->
 
     </main>
     <!-- PIN ME TO THE BOTTOM-->
