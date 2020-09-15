@@ -36,6 +36,23 @@ module.exports = function (app) {
     }
   });
 
+// get kick's topic
+app.get("/api/kickTopic/:id", function (req, res) {
+  if (!req.user) {
+    // The user is not logged in, send back to startup screen
+    res.redirect("/");
+  } else {
+    db.Kick.findOne({
+      where: {
+        id: req.params.id,
+      },
+    }).then(function (dbKicks) {
+
+      res.json(dbKicks);
+    });
+  }
+});
+
   app.post("/api/kickID", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
