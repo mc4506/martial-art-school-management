@@ -52,11 +52,13 @@ $(document).ready(() => {
             displayMembers(data);
           }).then(() => {
             updateStudentClickEvents();
-            applyHoverEvents();
+            // applyHoverEvents();
             applyTdClickEvents();
           });
       };
     });
+
+
 });
 
 const getEligibleClassLevel = function (rank) {
@@ -248,8 +250,7 @@ const addSession = function (teacherId, dataDateValue, dataTimeValue) {
         .then(function (data) {
             // console.log(data);
             displayClassSchedule(data);
-            // applyHoverEvents();
-            // applyTdClickEvents();
+            applyTdClickEvents();
             // location.reload();
         });
       });
@@ -278,7 +279,7 @@ const displayMemberClassInfo = function() {
 }
 
 const applyHoverEvents = function () {
-  $('td').css("cursor", "pointer");
+  $('td[data-cellvalue]').css("cursor", "pointer");
   $(document).on({
     mouseenter: function () {
       $(this).parent().addClass("class-info-hover");
@@ -354,7 +355,8 @@ const updateStudentClickEvents = function() {
 
 const applyTdClickEvents = function() {
   // Click on table cell to display who is enrolled in that class and check off student's attendance for that class
-  $('td > .class-info').on('click', function (event) {
+  $('td').on('click', '.class-info', function (event) {
+    event.stopImmediatePropagation();
     const id = $(this).parent().attr("id").slice(10);
     // console.log(id);
     $.get(`/api/enrollto_class/${id}`).then(results => {
@@ -367,6 +369,7 @@ const applyTdClickEvents = function() {
 
   // selector to select td elements that do not have an "id"
   $('td:not([id])').on('click', function (event) {
+    event.stopPropagation();
     // pass teacherId, date, and time of clicked cell to addSession function
     const teacherId = memberId;
     const dataDateValue = $(this).attr("data-datevalue");
@@ -454,7 +457,7 @@ $('.prev-week').on('click', function () {
       if(memberStatus === 0) {
         displayMemberClassInfo();
       } else if (memberStatus === 1) {
-        applyHoverEvents();
+        // applyHoverEvents();
         applyTdClickEvents();
       }
     });
