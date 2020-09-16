@@ -14,6 +14,7 @@ const role = {
   "1": "teacher",
 };
 
+// global variables for member that logs in
 let memberId = null;
 let memberStatus = null; // student, teacher, 
 let rank = null; // belt rank, white, blue, etc...
@@ -21,7 +22,6 @@ let isAdult = 1;
 let level = null; // beginner, intermediate, advanced
 
 $(document).ready(() => {
-
   // display Member info
   $.get("/api/user_data").then(data => {
       $(".member-name").text(`${data.firstName}`);
@@ -50,15 +50,9 @@ $(document).ready(() => {
           .then(data => {
             // console.log(data);
             displayMembers(data);
-          }).then(() => {
-            updateStudentClickEvents();
-            applyHoverEvents();
-            applyTdClickEvents();
           });
       };
     });
-
-
 });
 
 const getEligibleClassLevel = function (rank) {
@@ -80,14 +74,14 @@ const listEligibleClasses = function (results) {
   results.forEach(e => {
     // console.log(moment() - moment(e.calendarDate));
     // if class has passed, it is not eligible for selection
-    if((moment() - moment(e.calendarDate)) <= 0) {
+    if ((moment() - moment(e.calendarDate)) <= 0) {
       const inputEl = $('<input class="form-check-input class-info" type="checkbox">');
       // use checkbox value of SessionId to select class
       inputEl.attr("value", `${e.id}`);
       $(`#calSession${e.id}`).prepend(inputEl);
       $(`#calSession${e.id}>.class-info`).wrapAll('<div class="form-check"></div>')
       $(`#calSession${e.id}`).css("background", "#FFBA25");
-    } 
+    }
   })
 }
 
@@ -134,7 +128,6 @@ const displayMembers = function (data) {
       deleteBtnTd.children().attr("disabled", true);
     };
     tableRow.append(idTd, roleTd, firstNameTd, lastNameTd, ageTd, emailTd, phoneTd, beltTd, updateBtnTd, deleteBtnTd);
-
   })
 }
 
@@ -145,23 +138,23 @@ const displayStudents = function (data) {
     const listItemEl = $('<li class="list-group-item">');
     const memberRank = belt[e.User.certLevel];
 
-    if(e.isPresent) {
-        const pEl = $('<p>');
-        pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
-        listItemEl.append(pEl);
+    if (e.isPresent) {
+      const pEl = $('<p>');
+      pEl.text(`Present: ${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+      listItemEl.append(pEl);
     } else {
-        const formCheckEl = $('<div class="form-check"></div>');
-        const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
-        const labelEl = $('<label class="form-check-label">');
-        // assign userId to checkbox value
-        inputEl.attr("value", `${e.UserId}`);
-        inputEl.attr("id", `student${e.UserId}`);
-        labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
-        labelEl.attr("for", `student${e.UserId}`);
-        listItemEl.append(formCheckEl);
-        formCheckEl.append(inputEl, labelEl);
+      const formCheckEl = $('<div class="form-check"></div>');
+      const inputEl = $('<input class="form-check-input is-present" type="checkbox">');
+      const labelEl = $('<label class="form-check-label">');
+      // assign userId to checkbox value
+      inputEl.attr("value", `${e.UserId}`);
+      inputEl.attr("id", `student${e.UserId}`);
+      labelEl.text(`${e.User.firstName} ${e.User.lastName} - ${memberRank} belt`);
+      labelEl.attr("for", `student${e.UserId}`);
+      listItemEl.append(formCheckEl);
+      formCheckEl.append(inputEl, labelEl);
     }
-    
+
     $('ul.student-list').append(listItemEl);
   })
 }
@@ -174,218 +167,60 @@ const displayEnrolledClasses = function (data) {
   })
 }
 
-const addSession = function (teacherId, dataDateValue, dataTimeValue) {
-  $('#addSessionModal').modal('toggle');
-
-  // clear all form fields
-  $('form.add-session input').val("");
-  $('form.add-session select').val("");
-
-  // if repeat class checkbox is checked show start/end date calendar to select dates
-  $('#repeat-class').change(function (event) {
-    event.stopImmediatePropagation(); // prevent propagation of events outside of modal
-    $('#repeat-dates').toggle();
-    if (this.checked) {
-      $('#start-date').attr("required", true);
-      $('#end-date').attr("required", true);
-      $('#start-date').val(dataDateValue);
-    } else {
-      $('#start-date').attr("required", false);
-      $('#end-date').attr("required", false);
-      $('#start-date').val("");
-      $('#end-date').val("");
-      $('#dayOfWeeks').val("");
-    };
-  });
-
-  // add a session and calendar sessions
-  $('form.add-session').on('submit', function (event) {
-    event.preventDefault();
-
-    // retrieve session info
-    const sessionName = $('#class-name-input').val();
-    const adultclass = ($('#adult-class').val() === "Adult") ? true : false;
-    const level = parseInt($('#experience-level').val().slice(0, 1));
-    const inPersonLimit = parseInt($('#in-person-limit').val());
-
-    // retrieve calendar and calendarSession info
-    const repeatClass = $('#repeat-class').is(':checked');
-
-    let startDate = null;
-    let endDate = null;
-    let dayOfWeek="";
-    if(repeatClass) {
-      startDate = $('#start-date').val();
-      endDate = $('#end-date').val();
-    } else {
-      startDate = dataDateValue;
-      endDate = dataDateValue;
-    }
-    dayOfWeek = (moment(dataDateValue).day()+" ").trim();
-    let weekdaysArr=$('#dayOfWeeks').val();
-    console.log(weekdaysArr);
-    if (weekdaysArr.indexOf(dayOfWeek)<0){
-      weekdaysArr.push(dayOfWeek)
-    }
-    console.log(weekdaysArr)
-    const newSession = {
-      sessionName: sessionName,
-      adultclass: adultclass,
-      level: level,
-      inPersonLimit: inPersonLimit,
-      teacherId: teacherId,
-      startTime: dataTimeValue,
-      dayOfWeek: weekdaysArr,
-      startDate: startDate,
-      endDate: endDate
-    }
-
-    console.log(newSession);
-    $.post("/api/new_session", newSession)
-      .then(function (data) {
-        $('#addSessionModal').modal("toggle");
-        const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
-        // console.log(data);
-        $.get(`/api/class_schedule/${weekNumber}`)
-        .then(function (data) {
-            // console.log(data);
-            displayClassSchedule(data);
-            applyTdClickEvents();
-            // location.reload();
-        });
-      });
-  });
-}
-
-const displayMemberClassInfo = function() {
+const displayMemberClassInfo = function () {
   const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
   // get eligible class based on level and isAdult for week shown in table
   $.get(`/api/class_schedule/${level}/${isAdult}/${weekNumber}`)
-  .then(data => {
-    console.log(data);
-    listEligibleClasses(data);
-    listReachedLimitClasses(data);
-  }).then(() => {
-    // get classes the student is currently enrolled in
-    $.get(`/api/classes/${memberId}/${weekNumber}`)
-      .then((data) => {
-        if (data.length === 0) {
-          return;
-        } else {
-          displayEnrolledClasses(data);
-        }
-      })
-  });
-}
-
-const applyHoverEvents = function () {
-  $('td[data-cellvalue]').css("cursor", "pointer");
-  $(document).on({
-    mouseenter: function () {
-      $(this).parent().addClass("class-info-hover");
-    }, 
-    mouseleave: function () {
-      $(this).parent().removeClass("class-info-hover");
-    }
-  }, 'td > .class-info');
-
-  $(document).on({
-    mouseenter: function () {
-      $(this).text("+")
-      $(this).addClass("add-session-hover");
-    }, 
-      mouseleave: function () {
-      $(this).text("")
-      $(this).removeClass("add-session-hover");
-    }
-  }, 'td:not([id])');
-}
-
-const updateStudentClickEvents = function() {
-  let id = null;
-
-  $('.updateBtn').on('click', function(event) {
-    event.preventDefault();
-    $('#updateStudentModal').modal("toggle");
-    id = $(this).parent().attr("id").slice(6);
-    const firstName = $(`#student${id}-firstName`).text();
-    const lastName = $(`#student${id}-lastName`).text();
-    $('.student-name').text(`${firstName} ${lastName}`);
-  });
-  
-  $('.deleteBtn').on('click', function(event) {
-    event.preventDefault();
-    $('#confirmDeleteModal').modal("toggle");
-    id = $(this).parent().attr("id").slice(6);
-    const firstName = $(`#student${id}-firstName`).text();
-    const lastName = $(`#student${id}-lastName`).text();
-    $('.student-name').text(`${firstName} ${lastName}`);
-  });
-
-  $('#updateStudentBtn').on('click', function() {
-    const newCertLevel = getKeyByValue(belt, $('#rankSelect').val());
-    const newRole = getKeyByValue(role, $('#roleSelect').val().toLowerCase());
-
-    const studentRecord = {
-      certLevel: newCertLevel,
-      role: newRole,
-    };
-
-    // console.log(id, studentRecord);
-
-    $.ajax({
-      method: "PUT",
-      url: `/api/members/${id}`,
-      data: studentRecord,
-    }).then( response => {
-      location.reload();
-    })
-  });
-
-  $('#confirmDeleteBtn').on('click', function() {
-    // console.log(id);
-    $.ajax({
-      method: "DELETE",
-      url: `/api/members/${id}`
-    }).then( response => {
-      location.reload();
-    })
-  })
-}
-
-const applyTdClickEvents = function() {
-  // Click on table cell to display who is enrolled in that class and check off student's attendance for that class
-  $('td').on('click', '.class-info', function (event) {
-    event.stopImmediatePropagation();
-    const id = $(this).parent().attr("id").slice(10);
-    // console.log(id);
-    $.get(`/api/enrollto_class/${id}`).then(results => {
-      console.log(results);
-      $('#studentsModal').modal('toggle');
-      $('ul.student-list').attr("data-calSession", id);
-      displayStudents(results);
+    .then(data => {
+      console.log(data);
+      listEligibleClasses(data);
+      listReachedLimitClasses(data);
+    }).then(() => {
+      // get classes the student is currently enrolled in
+      $.get(`/api/classes/${memberId}/${weekNumber}`)
+        .then((data) => {
+          if (data.length === 0) {
+            return;
+          } else {
+            displayEnrolledClasses(data);
+          }
+        })
     });
-  });
-
-  // selector to select td elements that do not have an "id"
-  $('td:not([id])').on('click', function (event) {
-    event.stopPropagation();
-    // pass teacherId, date, and time of clicked cell to addSession function
-    const teacherId = memberId;
-    const dataDateValue = $(this).attr("data-datevalue");
-    const dataTimeValue = $(this).attr("data-timevalue");
-    addSession(teacherId, dataDateValue, dataTimeValue);
-  });
 }
 
 // helper function to find key given a value
-const getKeyByValue = function(obj, val) {
-  for (const  prop in obj) {
+const getKeyByValue = function (obj, val) {
+  for (const prop in obj) {
     if (obj.hasOwnProperty(prop)) {
       if (obj[prop] === val) return prop;
     }
   }
 }
+
+// add hover events
+$(document).on({
+  mouseenter: function () {
+    $('td[data-cellvalue]').css("cursor", "pointer");
+    $(this).parent().addClass("class-info-hover");
+  },
+  mouseleave: function () {
+    $('td[data-cellvalue]').css("cursor", "none");
+    $(this).parent().removeClass("class-info-hover");
+  }
+}, 'td > .class-info');
+
+$(document).on({
+  mouseenter: function () {
+    $('td[data-cellvalue]').css("cursor", "pointer");
+    $(this).text("+")
+    $(this).addClass("add-session-hover");
+  },
+  mouseleave: function () {
+    $('td[data-cellvalue]').css("cursor", "none");
+    $(this).text("")
+    $(this).removeClass("add-session-hover");
+  }
+}, 'td:not([id])');
 
 // click events
 $('#enrollBtn').on('click', event => {
@@ -431,7 +266,6 @@ $('.show-members').on('click', function () {
   $('.show-members').addClass('active');
 })
 
-
 // display class schedule tab
 $('.show-schedule').on('click', function () {
   $('.all-members').removeClass('d-block');
@@ -453,12 +287,9 @@ $('.prev-week').on('click', function () {
     .then(function (data) {
       // console.log(data);
       displayClassSchedule(data);
-    }).then( () => {
-      if(memberStatus === 0) {
+    }).then(() => {
+      if (memberStatus === 0) {
         displayMemberClassInfo();
-      } else if (memberStatus === 1) {
-        // applyHoverEvents();
-        applyTdClickEvents();
       }
     });
 });
@@ -474,12 +305,9 @@ $('.next-week').on('click', function () {
     .then(function (data) {
       // console.log(data);
       displayClassSchedule(data);
-    }).then( () => {
-      if(memberStatus === 0) {
+    }).then(() => {
+      if (memberStatus === 0) {
         displayMemberClassInfo();
-      } else if (memberStatus === 1) {
-        applyHoverEvents();
-        applyTdClickEvents();
       }
     });
 });
@@ -494,38 +322,203 @@ $('.this-week').on('click', function () {
     .then(function (data) {
       // console.log(data);
       displayClassSchedule(data);
-    }).then( () => {
-      if(memberStatus === 0) {
+    }).then(() => {
+      if (memberStatus === 0) {
         displayMemberClassInfo();
-      } else if (memberStatus === 1) {
-        applyHoverEvents();
-        applyTdClickEvents();
       }
     });
 });
 
 // Post attendance
-$('#attendanceBtn').on('click', function() {
+$('#attendanceBtn').on('click', function () {
   const attendanceList = [];
-  $('input.is-present:checked').each(function() {
-    attendanceList.push( 
-      {
+  $('input.is-present:checked').each(function () {
+    attendanceList.push({
       id: $(this).val(),
       isPresent: 1
-      }
-    );
+    });
   });
-  $('input.is-present:not(:checked)').each(function() {
-    attendanceList.push( 
-      {
+  $('input.is-present:not(:checked)').each(function () {
+    attendanceList.push({
       id: $(this).val(),
       isPresent: 0
-      }
-    );
+    });
   });
   console.log(attendanceList);
-  $.post("/api/attendance/"+$('ul.list-group.student-list').attr("data-calsession"),{'attendance' : attendanceList})
-  .then( () => {
+  $.post("/api/attendance/" + $('ul.list-group.student-list').attr("data-calsession"), {
+      'attendance': attendanceList
+    })
+    .then(() => {
+      $('#studentsModal').modal('toggle');
+    })
+});
+
+
+
+// selector to select td elements that are empty
+// use jquery delegation for dynamic elements
+$('tbody').on('click', ".empty-td", function (event) {
+  // event.stopPropagation();
+  const teacherId = memberId;
+  const dataDateValue = $(this).attr("data-datevalue");
+  const dataTimeValue = $(this).attr("data-timevalue");
+
+  $('#addSessionModal').modal('toggle');
+
+  // if repeat class checkbox is checked show start/end date calendar to select dates
+  $('#repeat-class').change(function (event) {
+    // event.stopImmediatePropagation();
+    $('#repeat-dates').toggle();
+    if (this.checked) {
+      $('#start-date').attr("required", true);
+      $('#end-date').attr("required", true);
+      $('#start-date').val(dataDateValue);
+    } else {
+      $('#start-date').attr("required", false);
+      $('#end-date').attr("required", false);
+      $('#start-date').val("");
+      $('#end-date').val("");
+      $('#dayOfWeeks').val("");
+    };
+  });
+
+  // unbind form submit event from previous modal clicks
+  $('form.add-session').off();
+    // add a session and calendar sessions
+  $('form.add-session').on('submit', function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    // retrieve session info
+    const sessionName = $('#class-name-input').val();
+    const adultclass = ($('#adult-class').val() === "Adult") ? true : false;
+    const level = parseInt($('#experience-level').val().slice(0, 1));
+    const inPersonLimit = parseInt($('#in-person-limit').val());
+
+    // retrieve calendar and calendarSession info
+    const repeatClass = $('#repeat-class').is(':checked');
+
+    let startDate = null;
+    let endDate = null;
+    let dayOfWeek = "";
+    if (repeatClass) {
+      startDate = $('#start-date').val();
+      endDate = $('#end-date').val();
+    } else {
+      startDate = dataDateValue;
+      endDate = dataDateValue;
+    }
+    dayOfWeek = (moment(dataDateValue).day() + " ").trim();
+    let weekdaysArr = $('#dayOfWeeks').val();
+    console.log(weekdaysArr);
+    if (weekdaysArr.indexOf(dayOfWeek) < 0) {
+      weekdaysArr.push(dayOfWeek)
+    }
+    console.log(weekdaysArr)
+    const newSession = {
+      sessionName: sessionName,
+      adultclass: adultclass,
+      level: level,
+      inPersonLimit: inPersonLimit,
+      teacherId: teacherId,
+      startTime: dataTimeValue,
+      dayOfWeek: weekdaysArr,
+      startDate: startDate,
+      endDate: endDate
+    }
+
+    // console.log(newSession);
+    $.post("/api/new_session", newSession)
+      .then(function (data) {
+        $('#addSessionModal').modal("toggle");
+        const weekNumber = parseInt($('#weekNum').attr("data-week-num"));
+        // console.log(data);
+        $.get(`/api/class_schedule/${weekNumber}`)
+          .then(function (data) {
+            // console.log(data);
+            displayClassSchedule(data);
+          });
+      });
+  });
+});
+
+// Click on table cell to display who is enrolled in that class and check off student's attendance for that class
+// use jquery delegation for dynamic elements
+$('tbody').on('click', '.class-info', function (event) {
+  event.stopImmediatePropagation();
+  const id = $(this).parent().attr("id").slice(10);
+  // console.log(id);
+  $.get(`/api/enrollto_class/${id}`).then(results => {
+    console.log(results);
     $('#studentsModal').modal('toggle');
-  })
-})
+    $('ul.student-list').attr("data-calSession", id);
+    displayStudents(results);
+  });
+});
+
+$('tbody').on('click', '.updateBtn', function (event) {
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  $('#updateStudentModal').modal("toggle");
+  const id = $(this).parent().attr("id").slice(6);
+  const firstName = $(`#student${id}-firstName`).text();
+  const lastName = $(`#student${id}-lastName`).text();
+  $('.student-name').text(`${firstName} ${lastName}`);
+
+  // unbind previous confirm deleteBtn clicks
+  $('#updateStudentBtn').off();
+
+  // bind click to latest modal
+  $('#updateStudentBtn').on('click', function () {
+    const newCertLevel = getKeyByValue(belt, $('#rankSelect').val());
+    const newRole = getKeyByValue(role, $('#roleSelect').val().toLowerCase());
+  
+    const studentRecord = {
+      certLevel: newCertLevel,
+      role: newRole,
+    };
+  
+    $.ajax({
+      method: "PUT",
+      url: `/api/members/${id}`,
+      data: studentRecord,
+    }).then(response => {
+      $('tbody.members').html('');
+
+      $.get("/api/all_members")
+        .then(data => {
+          // console.log(data);
+          displayMembers(data);
+        });
+    })
+  });
+});
+
+
+$('tbody').on('click', '.deleteBtn', function (event) {
+  event.preventDefault();
+  $('#confirmDeleteModal').modal("toggle");
+  const id = $(this).parent().attr("id").slice(6);
+  const firstName = $(`#student${id}-firstName`).text();
+  const lastName = $(`#student${id}-lastName`).text();
+  $('.student-name').text(`${firstName} ${lastName}`);
+
+  // unbind previous confirm deleteBtn clicks
+  $('#confirmDeleteBtn').off();
+  // rebind confirmDeleteBtn to latest modal click
+  $('#confirmDeleteBtn').on('click', function () {
+    // console.log(id);
+    $.ajax({
+      method: "DELETE",
+      url: `/api/members/${id}`
+    }).then(response => {
+      $('tbody.members').html('');
+
+      $.get("/api/all_members")
+        .then(data => {
+          // console.log(data);
+          displayMembers(data);
+        });
+    })
+  });
+});

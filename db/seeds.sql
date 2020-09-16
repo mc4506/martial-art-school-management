@@ -1,3 +1,5 @@
+-- OLD SEEDS FILE
+
 INSERT INTO users (memberStatus,firstName,lastName,certLevel,age,email,phoneNumber,password)
 VALUES ('0', 'John', 'Doe','5','37','mmaguy83@gmail.com','7325551234','coolguy123'),
        ('0', 'Jane', 'Doe','5','34','mmagal86@gmail.com','9085554321','coolgal123'),

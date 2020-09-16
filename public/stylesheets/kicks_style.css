@@ -15,14 +15,18 @@
 #topicChoice{
   margin-left: 10px;
 }
+
 input,
 textarea {
   margin: 10px;
 }
 
-
-
 p {
   margin: 0;
   font-size: 16px;
+}
+
+#userPassword,
+#userEmail {
+  margin: 0px;
 }

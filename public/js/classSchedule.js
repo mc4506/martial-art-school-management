@@ -48,7 +48,7 @@ const generateTable = function(week) {
         for (let j = 0; j < 7; j++) {
             let dayOfWeek = moment().week(week).startOf("week").add(j, "days").format("dddd M/D");
             $(`#day${j}`).text(dayOfWeek);
-            const tableData = $("<td>")
+            const tableData = $("<td class='empty-td'>")
             // assign unique data value to each td cell
             tableData.attr("data-cellvalue", dataCellValue);
 
@@ -96,6 +96,7 @@ const displayClassSchedule = function (data) {
         const newDiv = $('<div class="class-info">');
         newDiv.text(`${sessionName} - ${level} - ${adultclass} / In-Person limit of ${limit} people`);
 
+        $(`td[data-cellvalue=${tdID}]`).removeClass("empty-td");
         $(`td[data-cellvalue=${tdID}]`).attr("id", `calSession${calSessionId}`);
         $(`td[data-cellvalue=${tdID}]`).attr("data-session", `${sessionId}`);
         $(`td[data-cellvalue=${tdID}]`).append(newDiv);
