@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./stylesheets/style.css">
   <script src="./js/classSchedule.js" defer></script>
   <script src="./js/members.js" defer></script>
+  <script src="./js/commonFunctions.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
   <title>Welcome, Martial Artist</title>
 </head>
@@ -72,6 +73,10 @@
             <li class="list-group-item">Rank: <span class="member-belt"></span></li>
           </ul>
         </div>
+
+
+        <button type="button" class="btn btn-danger" id="updateProBtn" data-toggle="modal" data-target="#updateProfileModal"
+          style="margin-top: 0.5em;">Update Profile</button>
       </div>
       <div class="col col-lg-7">
         <div class="card mt-4">
@@ -330,6 +335,60 @@
     </div>
   </div>
 
+<!-- modal that displays Alerts -->
+  <div class="modal fade" id="myModal" role="dialog"></div>
+
+  <!-- modal that updates profile -->
+  <div class="modal fade" id="updateProfileModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-light">Update Profile</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="padding:0.5em;"> Please update following information</div>
+        <img src="", alt="Profile image", style="width: 50%; align-self: center;" id='profilePhoto'>
+        <form class="update">
+          <div class="form-group" style="margin:0.5em;">
+            <label for="phoneNumber">Profile picture</label>
+            <input type="url" class="form-control" id="profilePhotoURL" required>
+          </div>
+          <div class="form-group" style="margin:0.5em;">
+            <label for="phoneNumber">Phone number</label>
+            <input type="tel" class="form-control" id="phoneNumber" required>
+            <small id="phoneHelpBlock" class="form-text text-muted">This is a required field. 123-456-7890</small>
+          </div>
+          <div class="form-group" style="margin:0.5em;">
+            <label for="birthday">Enter your birthday</label>
+            <input type="date" class="form-control" id="birthday" required>
+          </div>
+          <div class="form-group" style="margin:0.5em;">
+            <label for="experienceLevel">Select your current belt rank if you have one, otherwise select "I don't have
+              one"</label>
+            <select class="form-control" id="experienceLevel">
+              <option value=0>I don't have one</option>
+              <option value=1>White</option>
+              <option value=2>Blue</option>
+              <option value=3>Yellow</option>
+              <option value=4>Green</option>
+              <option value=5>Red</option>
+              <option value=6>Brown</option>
+              <option value=7>Black</option>
+            </select>
+            
+          </div>
+          <button type="submit" class="btn btn-danger"style="margin:0.5em;" id="confirmProfileBtn" data-dismiss="modal">Confirm</button>
+        </form>
+        <div class="modal-footer">
+          <small class="form-text text-muted">
+            We will verify your experience level during the first day of class.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"
     integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
