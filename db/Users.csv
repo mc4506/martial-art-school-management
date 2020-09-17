@@ -1,4 +1,4 @@
-"id";"memberStatus";"firstName";"lastName";"certLevel";"age";"email";"phoneNumber";"password";"createdAt";"updatedAt"
+"id";"memberStatus";"firstName";"lastName";"certLevel";"age";"email";"phoneNumber";"password";"createdAt";"updatedAt";"googleId"
 1;1;"Master";"John";7;42;"masterJ@gmail.com";"201-333-5555";"$2a$10$Y5uEbrBPk4v8W4HwfKr8MebKuf3Eb/4li9VJjv6EwpkWPQutn1OSC";"2020-09-05 23:40:12";"2020-09-05 23:40:12"
 2;1;"Master";"Doe";7;32;"masterD@gmail.com";"201-555-1234";"$2a$10$SpKjGFE9eCZw7dUVUyzjTuZTGRJvr599B5tIbIASoX2phCYPVfCJO";"2020-09-05 23:41:08";"2020-09-05 23:41:08"
 3;0;"John";"Doe";1;37;"mmaguy83@gmail.com";"732-555-1234";"$2a$10$jdNIzdqk5i/rlPhzjTCb5.U21GVfE6EFBqDA7z4k.kAh2ayorxaCu";"2020-09-05 20:45:40";"2020-09-05 20:45:40"

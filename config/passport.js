@@ -1,5 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const db = require("../models");
 
@@ -33,7 +34,46 @@ passport.use(
         return done(null, dbUser);
       });
     }
-  )
+  ),
+);
+
+passport.use(
+  new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/redirect"
+  }, 
+  function(accessToken, refreshToken, profile, done) {
+    console.log(profile);  
+    //  db.User.findOrCreate({ 
+    //    where: {
+    //     googleId: profile.id
+    //    },
+    //    defaults: {
+    //      firstName: profile.name.givenName,
+    //      lastName: profile.name.familyName,
+    //      email: profile.emails.value
+    //    }
+    //   }).then( () => {
+    //     return done(null, dbUser);
+    //   })
+    db.User.findOne({
+      where: { googleId: profile.id
+      }}).then( dbUser => {
+        if (!dbUser) {
+          db.User.create({
+            firstName: profile.name.givenName,
+            lastName: profile.name.familyName,
+            email: profile.emails[0].value,
+            googleId: profile.id
+          });
+          // .then( () => {
+          //   return done(null, false)
+          // })
+        }
+        return done(null, dbUser);
+      })
+  })
 );
 
 // In order to help keep authentication state across HTTP requests,
