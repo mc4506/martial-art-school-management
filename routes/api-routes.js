@@ -62,6 +62,7 @@ module.exports = function (app) {
         phoneNumber: req.user.phoneNumber,
         certLevel: req.user.certLevel,
         memberStatus: req.user.memberStatus,
+        profilePhotoURL: req.user.profilePhotoURL,
         id: req.user.id
       });
     }
@@ -281,6 +282,28 @@ module.exports = function (app) {
         })
     }
   })
+
+  app.put('/api/memberUpdate/:id', function (req, res) {
+    if (!req.user) {
+      // The user is not logged in, send back to startup screen
+      res.redirect("/");
+    } else {
+      console.log(req.body, "params ", req.params.id);
+      db.User.update({
+        age: req.body.age,
+        certLevel: req.body.certLevel,
+        phoneNumber: req.body.phoneNumber,
+        profilePhotoURL:req.body.profilePhotoURL
+      },
+        {
+          where: { id: req.params.id }
+        }).then(function (results) {
+          console.log(results);
+          res.json({});
+        })
+    }
+  })
+
   app.delete('/api/members/:id', function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen

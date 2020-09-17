@@ -55,7 +55,7 @@ passport.use(
             lastName: profile.name.familyName,
             email: profile.emails[0].value,
             googleId: profile.id,
-            profilePhotoUrl: profile.photos[0].value
+            profilePhotoURL: profile.photos[0].value
           });
           // .then( () => {
           //   return done(null, false)

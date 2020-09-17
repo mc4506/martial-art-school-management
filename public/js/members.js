@@ -22,18 +22,20 @@ let isAdult = 1;
 let level = null; // beginner, intermediate, advanced
 
 $(document).ready(() => {
+  // Allowing to display alert modal
+  addModal();
   // display Member info
   $.get("/api/user_data").then(data => {
-      $(".member-name").text(`${data.firstName}`);
-      $(".member-email").text(`${data.email}`);
-      $(".member-phone").text(`${data.phoneNumber}`);
-      $(".member-belt").text(belt[data.certLevel] + " Belt");
+    $(".member-name").text(`${data.firstName}`);
+    $(".member-email").text(`${data.email}`);
+    $(".member-phone").text(`${data.phoneNumber}`);
+    $(".member-belt").text(belt[data.certLevel] + " Belt");
 
-      memberId = parseInt(data.id);
-      rank = parseInt(data.certLevel);
-      if (data.age < 18) isAdult = 0;
-      memberStatus = data.memberStatus;
-    })
+    memberId = parseInt(data.id);
+    rank = parseInt(data.certLevel);
+    if (data.age < 18) isAdult = 0;
+    memberStatus = data.memberStatus;
+  })
     .then(() => {
       // If member is a student
       if (memberStatus === 0) {
@@ -248,10 +250,13 @@ $('#enrollBtn').on('click', event => {
   } else {
     console.log(newSessions);
     $.post("/api/enroll", {
-        data: newSessions
-      })
+      data: newSessions
+    })
       .then((data) => {
         // console.log(data);
+
+        // modal You been successfully signed up"
+        alertMe('Congratulations!!!', "You been successfully signed up to class!!!!\n Looking forward to see you!")
         displayMemberClassInfo();
       })
       .catch(err => {
@@ -259,6 +264,46 @@ $('#enrollBtn').on('click', event => {
       });
   }
 })
+$('#updateProBtn').on('click', event => {
+  // $('#phoneNumber').mask('000-000-0000');
+  var ageDate;
+  const today = new Date(); 
+  $.get("/api/user_data").then(data => {
+    console.log(data);
+    $("#phoneNumber").val(data.phoneNumber);
+    // $("#experienceLevel").val(getCertLevel(data.certLevel));
+    $("#experienceLevel").val(data.certLevel);
+    ageDate = moment(today).subtract(data.age, 'years').format('yyyy-MM-DD');
+    $("#profilePhotoURL").val(data.profilePhotoURL);
+    $("#profilePhoto").attr('src',data.profilePhotoURL);
+    $('#birthday').val(ageDate);
+
+  })
+})
+
+$('#confirmProfileBtn').on('click', event => {
+  alertMe('Warning!!!', "You are changing your profile information!\n Please re-login!\n For changes to kick in")
+  setTimeout(function () {
+    $.get("/api/user_data").then(data => {
+      const userData = {
+        "age": convertBdayToAge($('#birthday').val()),
+        "certLevel": $("#experienceLevel").val(),
+        "phoneNumber": $("#phoneNumber").val(),
+        "profilePhotoURL":$("#profilePhotoURL").val()
+      };
+      $.ajax({
+        method: "PUT",
+        url: `/api/memberUpdate/${data.id}`,
+        data: userData,
+      }).then(response => {
+        console.log(response)
+        window.location.replace("/logout");
+      }).catch(handleLoginErr);
+
+    })
+  }, 3000);
+})
+
 
 // display all-members tab
 $('.show-members').on('click', function () {
@@ -351,8 +396,8 @@ $('#attendanceBtn').on('click', function () {
   });
   console.log(attendanceList);
   $.post("/api/attendance/" + $('ul.list-group.student-list').attr("data-calsession"), {
-      'attendance': attendanceList
-    })
+    'attendance': attendanceList
+  })
     .then(() => {
       $('#studentsModal').modal('toggle');
     })
