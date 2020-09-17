@@ -30,4 +30,11 @@ module.exports = function(app) {
     res.sendFile(path.join(__dirname, "../public/kicks.html"));
   });
 
+  app.get("/update_info", (req, res) => {
+    // If the user already has an account send them to the members page
+    // if (req.user) {
+    //   res.redirect("/members");
+    // }
+    res.sendFile(path.join(__dirname, "../public/update_info.html"));
+  });
 };
