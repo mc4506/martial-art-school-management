@@ -46,18 +46,6 @@ passport.use(
   }, 
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);  
-    //  db.User.findOrCreate({ 
-    //    where: {
-    //     googleId: profile.id
-    //    },
-    //    defaults: {
-    //      firstName: profile.name.givenName,
-    //      lastName: profile.name.familyName,
-    //      email: profile.emails.value
-    //    }
-    //   }).then( () => {
-    //     return done(null, dbUser);
-    //   })
     db.User.findOne({
       where: { googleId: profile.id
       }}).then( dbUser => {
@@ -66,7 +54,8 @@ passport.use(
             firstName: profile.name.givenName,
             lastName: profile.name.familyName,
             email: profile.emails[0].value,
-            googleId: profile.id
+            googleId: profile.id,
+            profilePhotoUrl: profile.photos[0].value
           });
           // .then( () => {
           //   return done(null, false)
