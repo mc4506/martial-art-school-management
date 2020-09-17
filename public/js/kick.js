@@ -95,6 +95,8 @@ function getKicks(num) {
           id: data[i].id,
           memberStatus: userInfo.memberStatus === 1 ? true : false,
           name: data[i].User.firstName + ' ' + data[i].User.lastName + " kicks.. ",
+          profilePhotoURL: data[i].User.profilePhotoURL,
+          isLinkOk: data[i].User.profilePhotoURL? true: false,
           message: data[i].message,
           time: moment(data[i].createdAt).format("h:mma on dddd")
         }
@@ -156,6 +158,12 @@ $("#kick-submit").on("click", function (event) {
         .then(res => {
           var row = $(`<div id='id_${res.id}'>`);
           row.addClass("kick");
+          console.log(userInfo.profilePhotoURL);
+          if (userInfo.profilePhotoURL===null){
+            row.append("<img src='./imgs/defaultImage.png' alt='profile picture' style=' height: 80px; width: 80px'>" );
+          } else{
+            row.append("<img src=" + userInfo.profilePhotoURL + " alt='profile picture' style=' height: 80px; width: 80px'>" );
+          };
           row.append("<p>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </p>");
           row.append("<p>" + newKick.message + "</p>");
           row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");

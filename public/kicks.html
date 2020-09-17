@@ -97,6 +97,11 @@
     <script id="example-template" type="text/x-handlebars-template">
         {{#each kicks}}
         <div class="kick" id=id_{{id}}>
+         {{#if isLinkOk}}
+            <img src={{profilePhotoURL}} alt='profile picture' style='height: 80px; width: 80px'>
+          {{else}}
+            <img src='./imgs/defaultImage.png' alt='profile picture' style=' height: 80px; width: 80px '>
+          {{/if}}
           <p>{{name}}</p>
           <p>{{message}}</p>
           <p>{{time}}</p> 
