@@ -28,7 +28,7 @@ module.exports = function (app) {
           KickTopicId: req.params.id,
         },
         // include: {all: true}
-        include: { model: db.User, attributes: ['firstName', 'lastName'] }
+        include: { model: db.User, attributes: ['firstName', 'lastName', 'profilePhotoURL'] }
       }).then(function (dbKicks) {
 
         res.json(dbKicks);
