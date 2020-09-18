@@ -82,7 +82,7 @@
 
     </main>
     <!-- PIN ME TO THE BOTTOM-->
-    <div class="fixed-bottom p-3 bg-danger text-white">
+    <!-- <div class="fixed-bottom p-3 bg-danger text-white">
         <div class="d-flex flex-row justify-content-around">
             <p class="text-white">Contact Us:</p>
             <a class="text-white" href="mailto:jmc846@scarletmail.rutgers.gmail.com">Jonathan Cobb</a>
@@ -90,24 +90,26 @@
             <a class="text-white" href="mailto:nlamonaco86@gmail.com">Nicholas La Monaco</a>
             <a class="text-white" href="mailto:sbolotnikov@gmail.com">Sergey Bolotnikov</a>
         </div>
-    </div>
+    </div> -->
     <!-- Modal -->
     <div class="modal fade" id="myModal" role="dialog"></div>
     <!-- Handlebars -->
     <script id="example-template" type="text/x-handlebars-template">
         {{#each kicks}}
-        <div class="kick" id=id_{{id}}>
+        <div class="media kick" id=id_{{id}}>
          {{#if isLinkOk}}
-            <img src={{profilePhotoURL}} alt='profile picture' style='height: 80px; width: 80px'>
+            <img src={{profilePhotoURL}} alt='profile picture' class="mr-3" style='height: 80px; width: 80px'>
           {{else}}
-            <img src='./imgs/defaultImage.png' alt='profile picture' style=' height: 80px; width: 80px '>
+            <img src='./imgs/defaultImage.png' alt='profile picture' class="mr-3" style=' height: 80px; width: 80px '>
           {{/if}}
-          <p>{{name}}</p>
-          <p>{{message}}</p>
-          <p>{{time}}</p> 
+          <div class="media-body">
+            <h5 class="mt-0">{{name}}</h5>
+            <p>{{message}}</p>
+            <p>{{time}}</p> 
           {{#if memberStatus}}
-	    	<button class="btn btn-danger" onclick="delButtonClick(event)" data-id={{id}}>Delete</button>
+	    	<button class="btn btn-danger float-right" onclick="delButtonClick(event)" data-id={{id}}>Delete</button>
           {{/if}}
+          </div>
         </div>                    
         {{/each}}                          
     </script>

@@ -157,18 +157,20 @@ $("#kick-submit").on("click", function (event) {
       $.post("/api/kickID", newKick)
         .then(res => {
           var row = $(`<div id='id_${res.id}'>`);
-          row.addClass("kick");
+          row.addClass("media kick");
           console.log(userInfo.profilePhotoURL);
           if (userInfo.profilePhotoURL===null){
-            row.append("<img src='./imgs/defaultImage.png' alt='profile picture' style=' height: 80px; width: 80px'>" );
+            row.append("<img src='./imgs/defaultImage.png' class='mr-3' alt='profile picture' style=' height: 80px; width: 80px'>" );
           } else{
-            row.append("<img src=" + userInfo.profilePhotoURL + " alt='profile picture' style=' height: 80px; width: 80px'>" );
+            row.append("<img src=" + userInfo.profilePhotoURL + " class='mr-3' alt='profile picture' style=' height: 80px; width: 80px'>" );
           };
-          row.append("<p>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </p>");
-          row.append("<p>" + newKick.message + "</p>");
-          row.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
+          var newDiv = $('<div class="media-body">')
+          row.append(newDiv);
+          newDiv.append("<h5 class='mt-0'>" + userInfo.firstName + " " + userInfo.lastName + " kicked: </h5>");
+          newDiv.append("<p>" + newKick.message + "</p>");
+          newDiv.append("<p>At " + moment(dateNow).format("h:mma on dddd") + "</p>");
           if (userInfo.memberStatus === 1) {
-            row.append('<button class="btn btn-danger" onclick="delButtonClick(event)" data-id=' + res.id + ">Delete</button");
+            newDiv.append('<button class="btn btn-danger" onclick="delButtonClick(event)" data-id=' + res.id + ">Delete</button");
           }
           $("#kicks-area").prepend(row);
         })
