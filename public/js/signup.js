@@ -38,8 +38,6 @@ $(document).ready(function () {
           "password": password,
         };
 
-        // console.log(userData)
-
         signUpUser(userData);
 
         // reset form data

@@ -27,10 +27,8 @@ module.exports = function (app) {
         where: {
           KickTopicId: req.params.id,
         },
-        // include: {all: true}
         include: { model: db.User, attributes: ['firstName', 'lastName', 'profilePhotoURL'] }
       }).then(function (dbKicks) {
-
         res.json(dbKicks);
       });
     }
@@ -53,6 +51,7 @@ app.get("/api/kickTopic/:id", function (req, res) {
   }
 });
 
+// find kickID
   app.post("/api/kickID", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
@@ -102,17 +101,15 @@ app.get("/api/kickTopic/:id", function (req, res) {
       // The user is not logged in, send back to startup screen
       res.redirect("/");
     } else {
-      // console.log("params ", req.params.id);
       db.KickTopic.destroy({
         where: { id: req.params.id}
       }).then(function (results) {
-        // console.log(results);
         res.json({});
       })
     }
   })
 
-  // delete kick "/api/kick/"+recordId
+  // delete kick by id
   app.delete("/api/kick/:id", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen

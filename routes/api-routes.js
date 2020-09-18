@@ -53,7 +53,7 @@ module.exports = function (app) {
     } else {
       console.log(req.user);
       // Otherwise send back the user's email and id
-      // Sending back a password, even a hashed password, isn't a good idea
+      // Sending back user info such as a password, even a hashed password, isn't a good idea
       res.json({
         firstName: req.user.firstName,
         lastName: req.user.lastName,
@@ -70,10 +70,6 @@ module.exports = function (app) {
 
   // get class schedule for current week
   app.get("/api/class_schedule/:weekNumber", (req, res) => {
-    // if (!req.user) {
-    //   // The user is not logged in, send back an empty object
-    //   res.json({});
-    // } else {
       const dateA = moment().week(req.params.weekNumber).startOf('week');
       const dateB = moment().week(req.params.weekNumber).endOf('week');
       console.log(dateA, dateB);
@@ -85,7 +81,6 @@ module.exports = function (app) {
       }).then(function (results) {
         res.json(results);
       });
-    // }
   });
 
   app.get("/api/class_schedule/:level/:isAdult/:weekNumber", async (req, res) => {
@@ -109,10 +104,8 @@ module.exports = function (app) {
             }
           }
         });
-        // console.log(results);
         // check if classes are full. If full add a flag to an updatedResults array
         const data = await updateResults(results);
-        // console.log(data);
         res.json(data);
       } catch (err) {
         res.json(err);
@@ -240,21 +233,14 @@ module.exports = function (app) {
           do {
             if (daysOfWeek.indexOf((moment(startDate).day() + ' ').trim()) >= 0) {
               console.log('Class date', moment(startDate).format("YYYY-MM-DD HH:mm:ss"));
-              // db.CalendarDays.findOne({
-              //   where: {
-              //     date: moment(startDate).format("yyyy-MM-DD"),
-              //   },
-              // }).then(function (resDate) {
-              // console.log('Date ID :',resDate.id);
               db.CalendarSessions.create({
                 startTime: sessionBlock.startTime,
                 calendarDate: startDate,
                 SessionId: sessionID,
               }).then(function (results) {
-                // console.log(results);
 
               })
-              // })
+
             }
             startDate = moment(startDate).add(1, 'd');
           } while (startDate < endDate)
@@ -303,7 +289,7 @@ module.exports = function (app) {
         })
     }
   })
-
+// delete user
   app.delete('/api/members/:id', function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back to startup screen
@@ -313,7 +299,6 @@ module.exports = function (app) {
       db.User.destroy({
         where: { id: req.params.id }
       }).then(function (results) {
-        // console.log(results);
         res.json({});
       })
     }
@@ -325,8 +310,6 @@ module.exports = function (app) {
     } else {
       console.log("params ", req.params.id);
       console.log("body ", req.body);
-      // id: parseInt($(this).val()),
-      // isPresent: true
       for (let i = 0; i < req.body.attendance.length; i++) {
         db.UserSessions.update({ isPresent: parseInt(req.body.attendance[i].isPresent) },
           {
@@ -355,7 +338,6 @@ const hasReachedInPersonLimit = async function (id) {
       model: db.Sessions,
     }
   });
-  // console.log(queryResults);
   if (numberOfStudents >= queryResults.Session.dataValues.inPersonLimit) {
     console.log(`class ${id} has reached limit`);
     return true;
@@ -368,12 +350,10 @@ const updateResults = async function (results) {
   for (const result of results) {
     if (await hasReachedInPersonLimit(result.id)) {
       result.dataValues["reachedLimit"] = true;
-      // console.log(result);
       updatedResults.push(result);
     } else {
       updatedResults.push(result);
     }
-    // console.log(updatedResults);
   }
   return updatedResults;
 }
