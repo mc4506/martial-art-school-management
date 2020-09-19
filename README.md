@@ -18,7 +18,7 @@ Deployed Site:  https://guarded-hamlet-46204.herokuapp.com/
 
 ## Installation
 
-clone this Repo. Visit the deployed page [link](https://guarded-hamlet-46204.herokuapp.com/).
+Just clone this Repo. Visit the deployed page [link](https://guarded-hamlet-46204.herokuapp.com/).
 
 ## Usage
 
