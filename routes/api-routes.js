@@ -3,6 +3,8 @@ const db = require("../models");
 const passport = require("../config/passport");
 var moment = require('moment');
 const { Op } = require("sequelize");
+require('dotenv').config();
+
 module.exports = function (app) {
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
@@ -63,7 +65,9 @@ module.exports = function (app) {
         certLevel: req.user.certLevel,
         memberStatus: req.user.memberStatus,       
         profilePhotoURL: req.user.profilePhotoURL,
-        id: req.user.id
+        id: req.user.id,
+        cloudUploadName: process.env.CLOUDINARY_CLOUDNAME,
+        cloudUploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET
       });
     }
   });
@@ -279,7 +283,7 @@ module.exports = function (app) {
         age: req.body.age,
         certLevel: req.body.certLevel,
         phoneNumber: req.body.phoneNumber,
-        profilePhotoURL: req.user.profilePhotoURL,
+        profilePhotoURL: req.body.profilePhotoURL,
       },
         {
           where: { id: req.params.id }
