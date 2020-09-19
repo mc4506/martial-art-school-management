@@ -542,7 +542,6 @@ $('tbody').on('click', '.updateBtn', function (event) {
 
       $.get("/api/all_members")
         .then(data => {
-          // console.log(data);
           displayMembers(data);
         });
     })

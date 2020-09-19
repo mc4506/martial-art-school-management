@@ -33,7 +33,6 @@ module.exports = function (sequelize, DataTypes) {
     } 
   });
   User.associate = function(models){
-    // User.belongsToMany(models.CalendarSessions, { through: "UserSessions" });
     User.hasMany(models.UserSessions, { onDelete: "cascade"})
 
     User.hasMany(models.Kick, {

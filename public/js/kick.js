@@ -1,12 +1,10 @@
 $(document).ready(() => {
-  // This file just does a GET request to figure out which user is logged in
-  // and updates the HTML on the page
   addModal();
   loadPageTopic(1)
 
 });
 var userInfo;
-
+// When the page loads, grab all of our kicks
 // load topic on page
 function loadPageTopic(num) {
   $.get("/api/user_data").then(data => {
@@ -54,10 +52,6 @@ $("#topicAdd").on("click", function (event) {
       getTopics(0);
       $("#kicks-area").html("");
     })
-    // .then(function () {
-      
-    //   $("#topics").val(1);
-    // });
 });
 
 function getTopics(boo) {
@@ -150,7 +144,7 @@ $("#kick-submit").on("click", function (event) {
     KickTopicId: $("select option:selected").val(),
   };
   var dateNow = new Date();
-  // Send an AJAX POST-request with jQuery
+  // Send a POST-request with jQuery
   $.post("/api/kicknew", newKick)
     // On success, run the following code
     .then(function () {
@@ -180,5 +174,3 @@ $("#kick-submit").on("click", function (event) {
   $("#author").val("");
   $("#kick-box").val("");
 });
-
-// When the page loads, grab all of our kicks

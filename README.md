@@ -12,6 +12,9 @@ Deployed Site:  https://guarded-hamlet-46204.herokuapp.com/
 
 * [Installation](#installation)
 * [Usage](#usage)
+* [Contributing](#contributing)
+* [License](#license)
+* [Questions](#questions)
 
 ## Installation
 

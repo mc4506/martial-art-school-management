@@ -7,7 +7,6 @@ module.exports = function (sequelize, DataTypes) {
         adultclass: { type: DataTypes.BOOLEAN, allowNull: false },
     });
     Sessions.associate = function(models){
-        // Sessions.belongsToMany(models.User, { through: 'UserSessions'});
         Sessions.hasMany(models.CalendarSessions);
     };
 
