@@ -9,7 +9,7 @@ $.get("/api/user_data").then(cloudData => {
             $.ajax({
                 url: "/api/user_data",
                 method: "PUT",
-                data: { profilePicture: imageUrl}
+                data: { profilePhotoURL: imageUrl}
             })
             .then(() => {
                 console.log("done!!!!");

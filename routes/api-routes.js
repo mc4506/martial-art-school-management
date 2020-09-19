@@ -62,7 +62,7 @@ module.exports = function (app) {
         phoneNumber: req.user.phoneNumber,
         certLevel: req.user.certLevel,
         memberStatus: req.user.memberStatus,       
-        profilePicture: req.user.profilePicture,
+        profilePhotoURL: req.user.profilePhotoURL,
         cloudUploadName: "dcys3axaw",
         cloudUploadPreset: "n2307ba6",
         id: req.user.id
