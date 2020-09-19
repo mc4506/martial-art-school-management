@@ -30,7 +30,7 @@ $(document).ready(() => {
     $(".member-email").text(`${data.email}`);
     $(".member-phone").text(`${data.phoneNumber}`);
     $(".member-belt").text(belt[data.certLevel] + " Belt");
-    if(data.profilePictureURL !== null) $(".member-photo").attr('src',data.profilePhotoURL);
+    if(data.profilePhotoURL !== null) $(".member-photo").attr('src',data.profilePhotoURL);
 
     memberId = parseInt(data.id);
     rank = parseInt(data.certLevel);
