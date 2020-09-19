@@ -1,25 +1,20 @@
 $.get("/api/user_data").then(cloudData => {
 
     var myWidget = cloudinary.createUploadWidget({
-        cloudName: "dcys3axaw", 
-        uploadPreset: "n2307ba6"}, (error, result) => { 
-        if (!error && result && result.event === "success") { 
-            console.log('Done! Here is the image info: ', result.info);
-            var imageUrl = result.info.secure_url;
-            $.ajax({
-                url: "/api/user_data",
-                method: "PUT",
-                data: { profilePhotoURL: imageUrl}
-            })
-            .then(() => {
-                console.log("done!!!!");
-                $('.member-icon').attr("src", imageUrl);
-            });
+        cloudName: cloudData.cloudUploadName, 
+        uploadPreset: cloudData.cloudUploadPreset}, (error, result) => {  
+        if (!error && result && result.event === "success") {
+            $("#updateProfileModal").show(); 
+            console.log('Done! Here is the image info: ', result.info.secure_url); 
+            $("#profilePhotoURL").val(result.info.secure_url);  
+            $("#profilePhoto").attr('src', result.info.secure_url);    
         }
         }
     )
     
-    document.getElementById("upload_widget").addEventListener("click", function(){
+    document.getElementById("upload_widget").addEventListener("click", function(event){
+        event.preventDefault();
+        $("#updateProfileModal").hide();
         myWidget.open();
     }, false);
 

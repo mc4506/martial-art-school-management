@@ -30,7 +30,7 @@ $(document).ready(() => {
     $(".member-email").text(`${data.email}`);
     $(".member-phone").text(`${data.phoneNumber}`);
     $(".member-belt").text(belt[data.certLevel] + " Belt");
-    if(data.profilePhotoURL !== null) $(".member-photo").attr('src',data.profilePhotoURL);
+    if (data.profilePhotoURL !== null) $(".member-photo").attr('src', data.profilePhotoURL);
 
     memberId = parseInt(data.id);
     rank = parseInt(data.certLevel);
@@ -265,10 +265,11 @@ $('#enrollBtn').on('click', event => {
       });
   }
 })
+
 $('#updateProBtn').on('click', event => {
   // $('#phoneNumber').mask('000-000-0000');
   var ageDate;
-  const today = new Date(); 
+  const today = new Date();
   $.get("/api/user_data").then(data => {
     console.log(data);
     $("#phoneNumber").val(data.phoneNumber);
@@ -276,7 +277,7 @@ $('#updateProBtn').on('click', event => {
     $("#experienceLevel").val(data.certLevel);
     ageDate = moment(today).subtract(data.age, 'years').format('yyyy-MM-DD');
     $("#profilePhotoURL").val(data.profilePhotoURL);
-    $("#profilePhoto").attr('src',data.profilePhotoURL);
+    $("#profilePhoto").attr('src', data.profilePhotoURL);
     $('#birthday').val(ageDate);
 
   })
@@ -290,7 +291,7 @@ $('#confirmProfileBtn').on('click', event => {
         "age": convertBdayToAge($('#birthday').val()),
         "certLevel": $("#experienceLevel").val(),
         "phoneNumber": $("#phoneNumber").val(),
-        "profilePhotoURL":$("#profilePhotoURL").val()
+        "profilePhotoURL": $("#profilePhotoURL").val()
       };
       $.ajax({
         method: "PUT",
