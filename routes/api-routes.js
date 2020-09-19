@@ -61,7 +61,7 @@ module.exports = function (app) {
         email: req.user.email,
         phoneNumber: req.user.phoneNumber,
         certLevel: req.user.certLevel,
-        memberStatus: req.user.memberStatus,
+        memberStatus: req.user.memberStatus,       
         profilePhotoURL: req.user.profilePhotoURL,
         id: req.user.id
       });
@@ -279,7 +279,7 @@ module.exports = function (app) {
         age: req.body.age,
         certLevel: req.body.certLevel,
         phoneNumber: req.body.phoneNumber,
-        profilePhotoURL:req.body.profilePhotoURL
+        profilePhotoURL: req.user.profilePhotoURL,
       },
         {
           where: { id: req.params.id }
