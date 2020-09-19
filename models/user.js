@@ -13,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     phoneNumber: { type: DataTypes.STRING, allowNull: false, defaultValue: "000-000-0000"},
     password: { type: DataTypes.STRING},
     googleId: { type: DataTypes.STRING},
-    profilePhotoURL: { type: DataTypes.STRING}
+    profilePicture: { type: DataTypes.STRING, allowNull: true }
   });
 
   // Creating a custom method for our User model. This will check if an unhashed password entered by the user can be compared to the hashed password stored in our database

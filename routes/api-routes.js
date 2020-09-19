@@ -61,8 +61,10 @@ module.exports = function (app) {
         email: req.user.email,
         phoneNumber: req.user.phoneNumber,
         certLevel: req.user.certLevel,
-        memberStatus: req.user.memberStatus,
-        profilePhotoURL: req.user.profilePhotoURL,
+        memberStatus: req.user.memberStatus,       
+        profilePicture: req.user.profilePicture,
+        cloudUploadName: "dcys3axaw",
+        cloudUploadPreset: "n2307ba6",
         id: req.user.id
       });
     }
@@ -279,7 +281,7 @@ module.exports = function (app) {
         age: req.body.age,
         certLevel: req.body.certLevel,
         phoneNumber: req.body.phoneNumber,
-        profilePhotoURL:req.body.profilePhotoURL
+        profilePicture: req.user.profilePicture,
       },
         {
           where: { id: req.params.id }
